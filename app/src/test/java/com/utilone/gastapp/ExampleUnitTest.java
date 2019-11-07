@@ -1,4 +1,4 @@
-package com.androidtutorialshub.loginregister;
+package com.utilone.gastapp;
 
 import org.junit.Test;
 
