@@ -5,5 +5,11 @@
     <color name="colorAccent">#228AE6</color>
     <color name="colorBackground">#2699FB</color>
     <color name="colorText">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorTextHint">#134D80</color>
+    <color name="colorMonthBack">#A7CCE9</color>
+    <color name="colorMonthFont">#4F7798</color>
+    <color name="colorYearBack">#999999</color>
+    <color name="colorYearFont">#707070</color>
+    <color name="colorPending">#FFEE82</color>
 </resources>
