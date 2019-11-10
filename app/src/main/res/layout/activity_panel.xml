@@ -7,7 +7,7 @@
   android:layout_alignParentTop="true"
   app:layout_anchorGravity="top"
   app:layout_constraintBottom_toTopOf="parent"
-  tools:context="com.utilone.gastapp.activities.panelActivity">
+  tools:context="com.utilone.gastapp.activities.PanelActivity">
 
   <LinearLayout
     android:layout_width="wrap_content"

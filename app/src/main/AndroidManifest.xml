@@ -8,7 +8,7 @@
     android:label="@string/app_name"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".activities.panelActivity"></activity>
+    <activity android:name=".activities.PanelActivity"></activity>
     <activity
       android:name=".activities.LoginActivity"
       android:screenOrientation="portrait">

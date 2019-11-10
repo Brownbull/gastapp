@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.utilone.gastapp.R;
 
-public class panelActivity extends AppCompatActivity {
+public class PanelActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
