@@ -17,7 +17,7 @@ import com.utilone.gastapp.model.User;
 import com.utilone.gastapp.sql.DatabaseHelper;
 
 /**
- * Created by lalit on 8/27/2016.
+ * Created by lalit on 9/12/2016 -> Modified by Brownbull 11/09/2019
  */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 

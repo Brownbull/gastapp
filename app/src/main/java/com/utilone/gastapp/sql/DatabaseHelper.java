@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.utilone.gastapp.model.Month;
 import com.utilone.gastapp.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lalit on 9/12/2016.
+ * Created by lalit on 9/12/2016 -> Modified by Brownbull 11/09/2019-> Modified by Brownbull 11/09/2019.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -44,6 +45,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String COLUMN_MONTH_USER_ID = "month_user_id";
   private static final String COLUMN_MONTH_PERIOD_ID = "month_period_id";
   private static final String COLUMN_MONTH_EXPECTED_ID = "month_expected_id";
+  private static final String COLUMN_MONTH_NAME = "month_name";
+  private static final String COLUMN_MONTH_YEAR = "month_year";
   private static final String COLUMN_MONTH_BALDIFF = "month_baldiff";
   // Expected Table Columns
   private static final String COLUMN_EXPECTED_ID = "expected_id";    
@@ -84,6 +87,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DEF_COLUMN_MONTH_USER_ID = "month_user_id INTEGER";
   private static final String DEF_COLUMN_MONTH_PERIOD_ID = "month_period_id INTEGER";
   private static final String DEF_COLUMN_MONTH_EXPECTED_ID = "month_expected_id INTEGER";
+  private static final String DEF_COLUMN_MONTH_NAME = "month_name TEXT";
+  private static final String DEF_COLUMN_MONTH_YEAR = "month_year INTEGER";
   private static final String DEF_COLUMN_MONTH_BALDIFF = "month_baldiff INTEGER";
   // Expected Table Columns
   private static final String DEF_COLUMN_EXPECTED_ID = "expected_id INTEGER PRIMARY KEY AUTOINCREMENT";    
@@ -124,6 +129,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         + DEF_COLUMN_MONTH_USER_ID + "," 
         + DEF_COLUMN_MONTH_PERIOD_ID + "," 
         + DEF_COLUMN_MONTH_EXPECTED_ID + "," 
+        + DEF_COLUMN_MONTH_NAME + "," 
+        + DEF_COLUMN_MONTH_YEAR + "," 
         + DEF_COLUMN_MONTH_BALDIFF + ")";
   private String CREATE_EXPECTED_TABLE = "CREATE TABLE " + TABLE_EXPECTED + "("
         + DEF_COLUMN_EXPECTED_ID + "," 
@@ -221,14 +228,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     db.execSQL(CREATE_NAMEMONTH_TABLE);
     // Initialize Tables
     db.execSQL(INIT_TYPE_TABLE);
-    Log.i("DB","1");
-    Log.i("DB",INIT_CATEGORY_TABLE);
     db.execSQL(INIT_CATEGORY_TABLE);
-    Log.i("DB","2");
-    Log.i("DB",INIT_NAMEMONTH_TABLE);
     db.execSQL(INIT_NAMEMONTH_TABLE);
-    Log.i("DB","3");
-
   }
 
   @Override
@@ -440,15 +441,158 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     return false;
   }
+
+  /**
+   * This method to check user exist or not
+   *
+   * @param email
+   * @param password
+   * @return true/false
+   */
+  public User getUser(String email, String password) {
+    User user = new User();
+    // array of columns to fetch
+    String[] columns = {
+        COLUMN_USER_ID,
+        COLUMN_USER_EMAIL,
+        COLUMN_USER_NAME
+    };
+    SQLiteDatabase db = this.getReadableDatabase();
+    // selection criteria
+    String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
+
+    // selection arguments
+    String[] selectionArgs = {email, password};
+
+    // query user table with conditions
+    /**
+     * Here query function is used to fetch records from user table this function works like we use sql query.
+     * SQL query equivalent to this query function is
+     * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
+     */
+    Cursor cursor = db.query(
+      TABLE_USER,                 //Table to query
+      columns,                    //columns to return
+      selection,                  //columns for the WHERE clause
+      selectionArgs,              //The values for the WHERE clause
+      null,                       //group the rows
+      null,                       //filter by row groups
+      null);                      //The sort order
+    int cursorCount = cursor.getCount();
+
+    if (cursorCount == 1 && cursor.moveToFirst()) {
+        user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
+        user.setName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
+        user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+    }
+    cursor.close();
+    db.close();
+
+    return user;
+  }
+
+  
   // METHODS END - USER
 
   // METHODS INI - MONTH
+  public long addMonth(long userID, String month, int year) {
+    long id;
+    SQLiteDatabase db = this.getWritableDatabase();
+    long periodID = newPeriodID();
+    long expectedID = newExpectedID();
+
+    ContentValues values = new ContentValues();
+    values.put(COLUMN_MONTH_USER_ID, userID);
+    values.put(COLUMN_MONTH_PERIOD_ID, periodID);
+    values.put(COLUMN_MONTH_EXPECTED_ID, expectedID);
+    values.put(COLUMN_MONTH_NAME, month);
+    values.put(COLUMN_MONTH_YEAR, year);
+    values.put(COLUMN_MONTH_BALDIFF, -16);
+
+    // Inserting Row
+    id = db.insert(TABLE_MONTH, null, values);
+    db.close();
+    return id;
+  }
+
+  public Month getMonth(String userID, String monthName, String year) {
+    Month month = new Month();
+    // array of columns to fetch
+    String[] columns = {
+      COLUMN_MONTH_ID,
+      COLUMN_MONTH_USER_ID,
+      COLUMN_MONTH_PERIOD_ID,
+      COLUMN_MONTH_EXPECTED_ID,
+      COLUMN_MONTH_NAME,
+      COLUMN_MONTH_YEAR,
+      COLUMN_MONTH_BALDIFF
+    };
+    SQLiteDatabase db = this.getReadableDatabase();
+    // selection criteria
+    String selection = COLUMN_MONTH_USER_ID + " = ?" + " AND " + COLUMN_MONTH_NAME + " = ?" + " AND " + COLUMN_MONTH_YEAR + " = ?";
+
+    // selection arguments
+    String[] selectionArgs = {userID, monthName, year};
+
+    // query user table with conditions
+    /**
+     * Here query function is used to fetch records from user table this function works like we use sql query.
+     * SQL query equivalent to this query function is
+     * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
+     */
+    Cursor cursor = db.query(
+      TABLE_USER,                 //Table to query
+      columns,                    //columns to return
+      selection,                  //columns for the WHERE clause
+      selectionArgs,              //The values for the WHERE clause
+      null,                       //group the rows
+      null,                       //filter by row groups
+      null);                      //The sort order
+    int cursorCount = cursor.getCount();
+
+    if (cursorCount > 0 && cursor.moveToFirst()) {
+      month.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_ID))));
+      month.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_USER_ID))));
+      month.setPeriodID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_PERIOD_ID))));
+      month.setExpectedID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_EXPECTED_ID))));
+      month.setMonth(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_NAME)));
+      month.setYear(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_YEAR))));
+      month.setBalDiff(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_BALDIFF))));
+    }
+    cursor.close();
+    db.close();
+
+    return month;
+  }
   // METHODS END - MONTH
 
   // METHODS INI - EXPECTED
+  public long newExpectedID() {
+    long id;
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put(COLUMN_EXPECTED_BALANCE, -16);
+    values.put(COLUMN_EXPECTED_MONTHLY_INCOME, -16);
+    values.put(COLUMN_EXPECTED_MONTHLY_OUTCOME, -16);
+    // Inserting Row
+    id = db.insert(TABLE_EXPECTED, null, values);
+    db.close();
+    return id;
+  }
   // METHODS END - EXPECTED
 
   // METHODS INI - PERIOD
+  public long newPeriodID() {
+    long id;
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put(COLUMN_PERIOD_BALANCE, -16);
+    values.put(COLUMN_PERIOD_TRANSACTIONS, -16);
+    // Inserting Row
+    id = db.insert(TABLE_PERIOD, null, values);
+    db.close();
+    return id;
+  }
   // METHODS END - PERIOD
 
   // METHODS INI - TRANSACT

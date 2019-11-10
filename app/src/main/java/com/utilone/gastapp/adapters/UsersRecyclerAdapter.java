@@ -13,7 +13,7 @@ import com.utilone.gastapp.model.User;
 import java.util.List;
 
 /**
- * Created by lalit on 10/10/2016.
+ * Created by lalit on 9/12/2016 -> Modified by Brownbull 11/09/2019
  */
 
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.UserViewHolder> {

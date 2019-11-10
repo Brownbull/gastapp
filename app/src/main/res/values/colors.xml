@@ -12,4 +12,6 @@
     <color name="colorYearBack">#999999</color>
     <color name="colorYearFont">#707070</color>
     <color name="colorPending">#FFEE82</color>
+    <color name="colorIncomePrincipal">#C5E3C7</color>
+    <color name="colorOutcomePrincipal">#F6B9BA</color>
 </resources>

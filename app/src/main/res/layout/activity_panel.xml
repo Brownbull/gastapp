@@ -122,6 +122,7 @@
     </LinearLayout>
 
     <LinearLayout
+      android:id="@+id/ll_income"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="10dp"
@@ -144,29 +145,33 @@
 
       <TextView
         android:id="@+id/tv_income"
-        android:layout_width="101dp"
+        android:layout_width="110dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Income"
+        android:text="Income $"
         android:textColor="@color/colorBlack"
         android:textSize="22dp"
         android:textStyle="bold" />
 
-      <TextView
-        android:id="@+id/tv_income_amnt"
+      <EditText
+        android:id="@+id/edt_income_amnt"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="$ -"
+        android:hint="1000000"
+        android:inputType="number"
         android:textColor="@color/colorBlack"
-        android:textSize="25dp"
-        android:textStyle="bold" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:background="@null"/>
+
 
       <TextView
         android:id="@+id/tv_confirm_income"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="3dp"
         android:paddingRight="20dp"
@@ -174,11 +179,13 @@
         android:text="?"
         android:textColor="@color/colorBlack"
         android:textSize="35dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="setIncome"/>
 
     </LinearLayout>
 
     <LinearLayout
+      android:id="@+id/ll_outcome"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="10dp"
@@ -201,29 +208,32 @@
 
       <TextView
         android:id="@+id/tv_outcome"
-        android:layout_width="101dp"
+        android:layout_width="110dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Outcome"
+        android:text="Outcome $"
         android:textColor="@color/colorBlack"
         android:textSize="22dp"
         android:textStyle="bold" />
 
-      <TextView
-        android:id="@+id/tv_outcome_amnt"
+      <EditText
+        android:id="@+id/edt_outcome_amnt"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="$ -"
+        android:hint="1000000"
+        android:inputType="number"
         android:textColor="@color/colorBlack"
-        android:textSize="25dp"
-        android:textStyle="bold" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:background="@null"/>
 
       <TextView
         android:id="@+id/tv_confirm_outcome"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="3dp"
         android:paddingRight="20dp"
@@ -231,7 +241,8 @@
         android:text="?"
         android:textColor="@color/colorBlack"
         android:textSize="35dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="setOutcome"/>
 
     </LinearLayout>
 
