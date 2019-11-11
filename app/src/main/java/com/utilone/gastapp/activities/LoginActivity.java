@@ -124,8 +124,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            emptyInputEditText();
 //            startActivity(accountsIntent);
       Intent panelIntent = new Intent(activity, PanelActivity.class);
-      panelIntent.putExtra("userID", user.getId());
-      panelIntent.putExtra("email", textInputEditTextEmail.getText().toString().trim());
+      panelIntent.putExtra("USERID", String.valueOf(user.getId()));
+      panelIntent.putExtra("EMAIL", textInputEditTextEmail.getText().toString().trim());
       emptyInputEditText();
       startActivity(panelIntent);
 

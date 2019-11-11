@@ -1,14 +1,20 @@
 package com.utilone.gastapp.model;
 
 public class Period {
-  private int id;
+  private long id;
   private int balance;
   private int transactions;
 
-  public int getId() {
+  public Period() {
+    this.id = -16;
+    this.balance = 0;
+    this.transactions = 0;
+  }
+
+  public long getId() {
     return id;
   }
-  public void setId(int id) {
+  public void setId(long id) {
       this.id = id;
   }
 

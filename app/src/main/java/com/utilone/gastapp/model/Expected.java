@@ -1,15 +1,22 @@
 package com.utilone.gastapp.model;
 
 public class Expected {
-  private int id;
+  private long id;
   private int balance;
   private int monthlyIncome;
   private int monthlyOutcome;
 
-  public int getId() {
+  public Expected() {
+    this.id = -16;
+    this.balance = 0;
+    this.monthlyIncome = 0;
+    this.monthlyOutcome = 0;
+  }
+
+  public long getId() {
     return id;
   }
-  public void setId(int id) {
+  public void setId(long id) {
       this.id = id;
   }
 

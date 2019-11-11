@@ -46,7 +46,6 @@
           android:paddingRight="12dp"
           android:paddingTop="5dp"
           android:paddingBottom="5dp"
-          android:text="November"
           android:textAppearance="@style/TextAppearance.AppCompat.Display1"
           android:textColor="@color/colorMonthFont"
           android:textStyle="bold" />
@@ -62,7 +61,6 @@
           android:paddingRight="12dp"
           android:paddingTop="5dp"
           android:paddingBottom="5dp"
-          android:text="2019"
           android:textAppearance="@style/TextAppearance.AppCompat.Display1"
           android:textColor="@color/colorYearFont"
           android:textStyle="bold" />
@@ -80,7 +78,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="$ 0"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/colorBlack"
         android:textStyle="bold" />
@@ -114,7 +111,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="+ 0"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/colorYearFont"
         android:textStyle="bold" />
@@ -148,7 +144,7 @@
         android:layout_width="110dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Income $"
+        android:text="Income"
         android:textColor="@color/colorBlack"
         android:textSize="22dp"
         android:textStyle="bold" />
@@ -211,7 +207,7 @@
         android:layout_width="110dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Outcome $"
+        android:text="Outcome"
         android:textColor="@color/colorBlack"
         android:textSize="22dp"
         android:textStyle="bold" />
@@ -253,7 +249,8 @@
       android:layout_gravity="end|bottom"
       android:layout_margin="16dp"
       android:contentDescription="@string/submit"
-      android:src="@drawable/ic_add" />
+      android:src="@drawable/ic_add"
+      android:onClick="startTransaction"/>
   </LinearLayout>
 
 

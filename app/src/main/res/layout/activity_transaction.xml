@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_alignParentTop="true"
+  app:layout_anchorGravity="top"
+  app:layout_constraintBottom_toTopOf="parent"
+  tools:context="com.utilone.gastapp.activities.TransactionActivity">
+
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="30dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:clipToPadding="false"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.508"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.081">
+
+    <EditText
+      android:id="@+id/edt_tr_dt"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="20sp"
+      android:ems="10"
+      android:gravity="center"
+      android:hint="when"
+      android:inputType="date"
+      android:textColor="@color/colorBlack"
+      android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+      android:textColorHint="@color/colorYearFont"
+      android:background="@null"/>
+
+    <EditText
+      android:id="@+id/edt_tr_amnt"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="25sp"
+      android:ems="10"
+      android:gravity="center"
+      android:hint="amount"
+      android:inputType="number"
+      android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+      android:textColorHint="@color/colorYearFont"
+      android:background="@null"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="50sp"
+      android:layout_marginRight="50sp"
+      android:gravity="right"
+      android:orientation="vertical">
+
+      <Spinner
+        android:id="@+id/spinner_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/year_radius"
+        android:gravity="center"
+        android:popupBackground="@drawable/year_radius"
+        android:spinnerMode="dropdown" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <Button
+        android:id="@+id/btn_tr_income"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:text="Button"
+        android:textSize="22sp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+
+      <Button
+        android:id="@+id/btn_tr_outcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:padding="15dp"
+        android:text="Button"
+        android:textSize="22sp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+      android:id="@+id/btn_tr_submit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Button" />
+
+    <EditText
+      android:id="@+id/edt_tr_desc"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ems="10"
+      android:hint="Description"
+      android:inputType="textPersonName" />
+
+  </LinearLayout>
+</android.support.constraint.ConstraintLayout>

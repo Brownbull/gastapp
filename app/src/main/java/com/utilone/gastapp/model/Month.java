@@ -1,10 +1,10 @@
 package com.utilone.gastapp.model;
 
 public class Month {
-  private int id;
-  private int userID;
-  private int periodID;
-  private int expectedID;
+  private long id;
+  private long userID;
+  private long periodID;
+  private long expectedID;
   private String month;
   private int year;
   private int balDiff;
@@ -16,34 +16,34 @@ public class Month {
     this.expectedID = -16;
     this.month = "";
     this.year = -16;
-    this.balDiff = -16;
+    this.balDiff = 0;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
-  public void setId(int id) {
+  public void setId(long id) {
       this.id = id;
   }
 
-  public int getUserID() {
+  public long getUserID() {
     return userID;
   }
-  public void setUserID(int userID) {
+  public void setUserID(long userID) {
       this.userID = userID;
   }
 
-  public int getPeriodID() {
+  public long getPeriodID() {
     return periodID;
   }
-  public void setPeriodID(int periodID) {
+  public void setPeriodID(long periodID) {
       this.periodID = periodID;
   }
 
-  public int getExpectedID() {
+  public long getExpectedID() {
     return expectedID;
   }
-  public void setExpectedID(int expectedID) {
+  public void setExpectedID(long expectedID) {
       this.expectedID = expectedID;
   }
 
