@@ -195,6 +195,7 @@ public class PanelActivity extends AppCompatActivity {
     Intent transactionIntent = new Intent(activity, TransactionActivity.class);
     transactionIntent.putExtra("USERID", String.valueOf(user.getId()));
     transactionIntent.putExtra("MONTHID", String.valueOf(month.getId()));
+    transactionIntent.putExtra("MONTHNAME", String.valueOf(month.getMonth()));
     transactionIntent.putExtra("EXPECTEDID", String.valueOf(expected.getId()));
     transactionIntent.putExtra("PERIODID", String.valueOf(period.getId()));
     startActivity(transactionIntent);

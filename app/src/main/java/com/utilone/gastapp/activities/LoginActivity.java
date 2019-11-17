@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
       panelIntent.putExtra("EMAIL", textInputEditTextEmail.getText().toString().trim());
       emptyInputEditText();
       startActivity(panelIntent);
+      finish();
 
     } else {
       // Snack Bar to show success message that record is wrong
