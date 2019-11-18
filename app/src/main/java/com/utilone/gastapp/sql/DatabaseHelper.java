@@ -60,13 +60,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String COLUMN_EXPECTED_MONTHLY_OUTCOME = "expected_monthly_outcome";
   // Period Table Columns
   private static final String COLUMN_PERIOD_ID = "period_id";   
+  private static final String COLUMN_PERIOD_INCOMES = "period_incomes";   
+  private static final String COLUMN_PERIOD_OUTCOMES = "period_outcomes";   
   private static final String COLUMN_PERIOD_BALANCE = "period_balance";   
   private static final String COLUMN_PERIOD_TRANSACTIONS = "period_transactions";   
   // Transact Table Columns
   private static final String COLUMN_TRANSACT_ID = "transact_id"; 
   private static final String COLUMN_TRANSACT_PERIOD_ID = "transact_period_id"; 
   private static final String COLUMN_TRANSACT_TYPE = "transact_type"; 
-  private static final String COLUMN_TRANSACT_DATE = "transact_date"; 
+  private static final String COLUMN_TRANSACT_DAY = "transact_day"; 
   private static final String COLUMN_TRANSACT_AMOUNT = "transact_amount"; 
   private static final String COLUMN_TRANSACT_CATEGORY = "transact_category";
   private static final String COLUMN_TRANSACT_DESC = "transact_desc";
@@ -102,13 +104,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DEF_COLUMN_EXPECTED_MONTHLY_OUTCOME = COLUMN_EXPECTED_MONTHLY_OUTCOME + " INTEGER";
   // Period Table Columns
   private static final String DEF_COLUMN_PERIOD_ID = COLUMN_PERIOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT";   
+  private static final String DEF_COLUMN_PERIOD_INCOMES = COLUMN_PERIOD_INCOMES + " INTEGER";   
+  private static final String DEF_COLUMN_PERIOD_OUTCOMES = COLUMN_PERIOD_OUTCOMES + " INTEGER";   
   private static final String DEF_COLUMN_PERIOD_BALANCE = COLUMN_PERIOD_BALANCE + " INTEGER";   
   private static final String DEF_COLUMN_PERIOD_TRANSACTIONS = COLUMN_PERIOD_TRANSACTIONS + " INTEGER";   
   // Transact Table Columns
   private static final String DEF_COLUMN_TRANSACT_ID = COLUMN_TRANSACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT"; 
   private static final String DEF_COLUMN_TRANSACT_PERIOD_ID = COLUMN_TRANSACT_PERIOD_ID + " INTEGER"; 
   private static final String DEF_COLUMN_TRANSACT_TYPE = COLUMN_TRANSACT_TYPE + " TEXT"; 
-  private static final String DEF_COLUMN_TRANSACT_DATE = COLUMN_TRANSACT_DATE + " DATETIME"; 
+  private static final String DEF_COLUMN_TRANSACT_DAY = COLUMN_TRANSACT_DAY + " INTEGER";
   private static final String DEF_COLUMN_TRANSACT_AMOUNT = COLUMN_TRANSACT_AMOUNT + " INTEGER"; 
   private static final String DEF_COLUMN_TRANSACT_CATEGORY = COLUMN_TRANSACT_CATEGORY + " TEXT"; 
   private static final String DEF_COLUMN_TRANSACT_DESC = COLUMN_TRANSACT_DESC + " TEXT"; 
@@ -144,13 +148,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         + DEF_COLUMN_EXPECTED_MONTHLY_OUTCOME + ")";
   private String CREATE_PERIOD_TABLE = "CREATE TABLE " + TABLE_PERIOD + "("
         + DEF_COLUMN_PERIOD_ID + "," 
+        + DEF_COLUMN_PERIOD_INCOMES + "," 
+        + DEF_COLUMN_PERIOD_OUTCOMES + "," 
         + DEF_COLUMN_PERIOD_BALANCE + "," 
         + DEF_COLUMN_PERIOD_TRANSACTIONS + ")";
   private String CREATE_TRANSACT_TABLE = "CREATE TABLE " + TABLE_TRANSACT + "("
         + DEF_COLUMN_TRANSACT_ID + "," 
         + DEF_COLUMN_TRANSACT_PERIOD_ID + "," 
         + DEF_COLUMN_TRANSACT_TYPE + "," 
-        + DEF_COLUMN_TRANSACT_DATE + "," 
+        + DEF_COLUMN_TRANSACT_DAY + "," 
         + DEF_COLUMN_TRANSACT_AMOUNT + "," 
         + DEF_COLUMN_TRANSACT_CATEGORY + ","
         + DEF_COLUMN_TRANSACT_DESC + ")";
@@ -692,6 +698,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     long id;
     SQLiteDatabase db = this.getWritableDatabase();
     ContentValues values = new ContentValues();
+    values.put(COLUMN_PERIOD_INCOMES, 0);
+    values.put(COLUMN_PERIOD_OUTCOMES, 0);
     values.put(COLUMN_PERIOD_BALANCE, 0);
     values.put(COLUMN_PERIOD_TRANSACTIONS, 0);
     // Inserting Row
@@ -712,11 +720,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     db.close();
   }
 
+  public Period updatePeriodAmnts(long periodID) {
+    int ins = 0;
+    int outs = 0;
+    int bal = 0;
+    String type;
+    int amnt;
+    int howMany;
+    SQLiteDatabase db = this.getWritableDatabase();
+    
+    String[] columnsTransact = {
+      COLUMN_TRANSACT_TYPE,
+      COLUMN_TRANSACT_AMOUNT
+    };
+
+     // selection criteria
+    String selection = COLUMN_TRANSACT_PERIOD_ID + " = ?";
+
+    // selection argument
+    String[] selectionArgs = {String.valueOf(periodID)};
+
+    Cursor cursor = db.query(
+      TABLE_TRANSACT, //Table to query
+      columnsTransact,    //columns to return
+      selection,        //columns for the WHERE clause
+      selectionArgs,        //The values for the WHERE clause
+      null,       //group the rows
+      null,       //filter by row groups
+      null); //The sort order
+    
+    howMany = cursor.getCount();
+    // Traversing through all rows and adding to list
+    if (cursor.moveToFirst()) {
+      do {
+        type = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE));
+        amnt = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT)));
+        // Adding values
+        if (type.equals("Income")){
+          ins = ins + amnt;
+        }
+        else if (type.equals("Outcome")){
+          outs = outs + amnt;
+        }
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+
+    ContentValues values = new ContentValues();
+
+    values.put(COLUMN_PERIOD_INCOMES, ins);
+    values.put(COLUMN_PERIOD_OUTCOMES, outs);
+    values.put(COLUMN_PERIOD_BALANCE, ins - outs);
+    values.put(COLUMN_PERIOD_TRANSACTIONS, howMany);
+    // updating row
+    db.update(TABLE_PERIOD, values, COLUMN_PERIOD_ID + " = ?", selectionArgs);
+    db.close();
+
+    return new Period(periodID, ins, outs, ins - outs, howMany );
+  }
+
   public Period getPeriod(long periodID) {
     Period period = new Period();
     // array of columns to fetch
     String[] columns = {
       COLUMN_PERIOD_ID,
+      COLUMN_PERIOD_INCOMES,
+      COLUMN_PERIOD_OUTCOMES,
       COLUMN_PERIOD_BALANCE,
       COLUMN_PERIOD_TRANSACTIONS
     };
@@ -745,6 +814,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     if (cursorCount > 0 && cursor.moveToFirst()) {
       period.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERIOD_ID))));
+      period.setIncomes(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERIOD_INCOMES))));
+      period.setOutcomes(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERIOD_OUTCOMES))));
       period.setBalance(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERIOD_BALANCE))));
       period.setTransactions(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERIOD_TRANSACTIONS))));
     }
@@ -764,7 +835,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     ContentValues values = new ContentValues();
     values.put(COLUMN_TRANSACT_PERIOD_ID, tr.getPeriodID());
     values.put(COLUMN_TRANSACT_TYPE, tr.getType());
-    values.put(COLUMN_TRANSACT_DATE, tr.getTransactDate());
+    values.put(COLUMN_TRANSACT_DAY, tr.getTransactDay());
     values.put(COLUMN_TRANSACT_AMOUNT, tr.getAmount());
     values.put(COLUMN_TRANSACT_CATEGORY, tr.getCategory());
     values.put(COLUMN_TRANSACT_DESC, tr.getDesc());
@@ -774,6 +845,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     tr.setId(id);
     db.close();
     return tr;
+  }
+
+  public long addTransact(Transact transact) {
+    long id;
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues values = new ContentValues();
+    values.put(COLUMN_TRANSACT_PERIOD_ID, transact.getPeriodID());
+    values.put(COLUMN_TRANSACT_TYPE, transact.getType());
+    values.put(COLUMN_TRANSACT_DAY, transact.getTransactDay());
+    values.put(COLUMN_TRANSACT_AMOUNT, transact.getAmount());
+    values.put(COLUMN_TRANSACT_CATEGORY, transact.getCategory());
+    values.put(COLUMN_TRANSACT_DESC, transact.getDesc());
+
+    // Inserting Row
+    id = db.insert(TABLE_TRANSACT, null, values);
+    db.close();
+    return Long.valueOf(id);
+  }
+
+  public List<Transact> getAllTransact(long periodID, String type) {
+    Log.i("getAllTransact", "periodID" + periodID);
+    // array of columns to fetch
+    String[] columns = {
+      COLUMN_TRANSACT_TYPE,
+      COLUMN_TRANSACT_DAY,
+      COLUMN_TRANSACT_AMOUNT,
+      COLUMN_TRANSACT_CATEGORY,
+      COLUMN_TRANSACT_DESC
+    };
+    // selection criteria
+    String selection = COLUMN_TRANSACT_PERIOD_ID + " = ?" + " AND " +  COLUMN_TRANSACT_TYPE + " =?";
+
+    // selection arguments
+    String[] selectionArgs = { String.valueOf(periodID), type };
+    
+    List<Transact> transactList = new ArrayList<Transact>();
+
+    SQLiteDatabase db = this.getReadableDatabase();
+
+    Cursor cursor = db.query(
+      TABLE_TRANSACT, //Table to query
+      columns,    //columns to return
+      selection,        //columns for the WHERE clause
+      selectionArgs,        //The values for the WHERE clause
+      null,       //group the rows
+      null,       //filter by row groups
+      null); //The sort order
+
+
+    // Traversing through all rows and adding to list
+    if (cursor.moveToFirst()) {
+      do {
+        Transact transact = new Transact();
+        transact.setType(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE)));
+        transact.setTransactDay(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DAY))));
+        transact.setAmount(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT))));
+        transact.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_CATEGORY)));
+        transact.setDesc(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DESC)));
+        // Adding transact record to list
+        transactList.add(transact);
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+    db.close();
+
+    // return transact list
+    return transactList;
   }
   // METHODS END - TRANSACT
 

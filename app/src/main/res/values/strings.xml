@@ -2,6 +2,10 @@
   <string name="app_name">Login Register</string>
   <string name="text_accounts">All Accounts</string>
   <string name="hint_name">Name</string>
+  <string name="hint_day">Day</string>
+  <string name="hint_category">Category</string>
+  <string name="hint_amount">Amount</string>
+  <string name="hint_desc">Description</string>
   <string name="hint_email">Email</string>
   <string name="hint_password">Password</string>
   <string name="hint_confirm_password">Confirm Password</string>

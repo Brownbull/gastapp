@@ -1,18 +1,22 @@
 package com.utilone.gastapp.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.utilone.gastapp.R;
 import com.utilone.gastapp.model.Transact;
 import com.utilone.gastapp.sql.DatabaseHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -32,17 +36,24 @@ public class TransactionActivity extends AppCompatActivity {
   // BACKEND
   Transact transact;
   String[] categories;
-  String[] monthNames;
+  String category;
+//  String[] monthNames;
   long userID;
+  long transactID;
   long monthID;
   String monthName;
   long expectedID;
   long periodID;
+  String type;
+  int amnt;
+  int day;
+  String desc;
 
   // FRONTEND
-  private EditText tvDay;
-  private Spinner spinnerMonths;
-  private EditText tvYear;
+  private EditText edtDay;
+  private TextView tvMonth;
+//  private Spinner spinnerMonths;
+  private TextView tvYear;
   private EditText edtTrAmnt;
   private Spinner spinnerCategories;
   private Button btnTrIncome;
@@ -60,7 +71,8 @@ public class TransactionActivity extends AppCompatActivity {
     userID = Long.valueOf(tempUserID);
     String tempMonthID = Panel.getStringExtra("MONTHID");
     monthID = Long.valueOf(tempMonthID);
-    String monthName = Panel.getStringExtra("MONTHNAME");
+    monthName = Panel.getStringExtra("MONTHNAME");
+    Log.i("TransactionActivity", "monthName: " + monthName);
     String tempExpectedID = Panel.getStringExtra("EXPECTEDID");
     expectedID = Long.valueOf(tempExpectedID);
     String tempPeriodID = Panel.getStringExtra("PERIODID");
@@ -80,9 +92,10 @@ public class TransactionActivity extends AppCompatActivity {
    * This method is to initialize views
    */
   private void initViews() {
-    tvDay = (EditText) findViewById(R.id.edt_day);
-    spinnerMonths = (Spinner) findViewById(R.id.spinner_months);
-    tvYear = (EditText) findViewById(R.id.edt_year);
+    edtDay = (EditText) findViewById(R.id.edt_day);
+    tvMonth = (TextView) findViewById(R.id.tv_month);
+//    spinnerMonths = (Spinner) findViewById(R.id.spinner_months);
+    tvYear = (TextView) findViewById(R.id.edt_year);
     edtTrAmnt = (EditText) findViewById(R.id.edt_tr_amnt);
     spinnerCategories = (Spinner) findViewById(R.id.spinner_categories);
     btnTrIncome = (Button) findViewById(R.id.btn_tr_income);
@@ -93,24 +106,55 @@ public class TransactionActivity extends AppCompatActivity {
 
   private void initObjects(long userID) {
     databaseHelper = new DatabaseHelper(activity);
-    transact = databaseHelper.addTransact(periodID);
     // MONTHS INIT
-    monthNames = databaseHelper.getAllNameMonthStrings();
-    ArrayAdapter<String> adapterMonths = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthNames);
-    spinnerMonths.setAdapter(adapterMonths);
+    tvMonth.setText(monthName);
+    Log.i("TransactionActivity", "monthName; " + monthName);
+    // monthNames = databaseHelper.getAllNameMonthStrings();
+    // ArrayAdapter<String> adapterMonths = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthNames);
+    // spinnerMonths.setAdapter(adapterMonths);
     // CATEGORIES INIT
     categories = databaseHelper.getAllCategories();
     ArrayAdapter<String> adapterCategories = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
     spinnerCategories.setAdapter(adapterCategories);
 
     // OTHER INITS
-    tvDay.setText(String.valueOf(cday));
+    edtDay.setText(String.valueOf(cday));
     tvYear.setText(String.valueOf(cyear));
-
     btnTrIncome.setText("Income");
-    btnTrIncome.setBackgroundResource(R.drawable.income_radius);
     btnTrOutcome.setText("Outcome");
+    type = "Outcome";
     btnTrOutcome.setBackgroundResource(R.drawable.outcome_radius);
+    btnTrIncome.setBackgroundResource(R.drawable.inactive_radius);
+  }
+
+  public void setIncome(View view){
+    type = "Income";
+    btnTrIncome.setBackgroundResource(R.drawable.income_radius);
+    btnTrOutcome.setBackgroundResource(R.drawable.inactive_radius);
+  }
+
+  public void setOutcome(View view){
+    type = "Outcome";
+    btnTrOutcome.setBackgroundResource(R.drawable.outcome_radius);
+    btnTrIncome.setBackgroundResource(R.drawable.inactive_radius);
+  }
+
+  public void addCurrentTransact(View view){
+    String value;
+    value = edtTrAmnt.getText().toString();
+    amnt = Integer.parseInt(value);
+    category = spinnerCategories.getSelectedItem().toString();
+    desc = edtTrDesc.getText().toString();
+    value = edtDay.getText().toString();
+    day = Integer.parseInt(value);
+
+    transact = new Transact(periodID, type, day, amnt, category, desc);
+
+
+    transactID = databaseHelper.addTransact(transact);
+    transact.setId(transactID);
     
+    Log.i("addCurrentTransact", "transact: " + transact.toString());
+    finish();
   }
 }
