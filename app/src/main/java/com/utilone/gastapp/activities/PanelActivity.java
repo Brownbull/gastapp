@@ -132,52 +132,8 @@ public class PanelActivity extends AppCompatActivity {
     else {
       Log.i("initPanel", "else case");
       updateObjects();
-
-      listTransactIns = new ArrayList<>();
-      transactRecyclerAdapterIns = new TransactRecyclerAdapter(listTransactIns);
-
-      RecyclerView.LayoutManager mLayoutManagerIns = new LinearLayoutManager(getApplicationContext());
-      recyclerViewIncomes.setLayoutManager(mLayoutManagerIns);
-      recyclerViewIncomes.setItemAnimator(new DefaultItemAnimator());
-      recyclerViewIncomes.setHasFixedSize(true);
-      recyclerViewIncomes.setAdapter(transactRecyclerAdapterIns);
-
-      listTransactOuts = new ArrayList<>();
-      transactRecyclerAdapterOuts = new TransactRecyclerAdapter(listTransactOuts);
-
-      RecyclerView.LayoutManager mLayoutManagerOuts = new LinearLayoutManager(getApplicationContext());
-      recyclerViewOutcomes.setLayoutManager(mLayoutManagerOuts);
-      recyclerViewOutcomes.setItemAnimator(new DefaultItemAnimator());
-      recyclerViewOutcomes.setHasFixedSize(true);
-      recyclerViewOutcomes.setAdapter(transactRecyclerAdapterOuts);
-
-      getDataFromSQLite();
     }
   } // eof initObjects
-
-   /**
-     * This method is to fetch all user records from SQLite
-     */
-    private void getDataFromSQLite() {
-        // AsyncTask is used that SQLite operation not blocks the UI Thread.
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                listTransactIns.clear();
-                listTransactOuts.clear();
-                listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
-                listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                transactRecyclerAdapterIns.notifyDataSetChanged();
-                transactRecyclerAdapterOuts.notifyDataSetChanged();
-            }
-        }.execute();
-    }
 
   /**
    * This method is to initialize listeners
@@ -229,6 +185,50 @@ public class PanelActivity extends AppCompatActivity {
         tvDiffBalance.setText("+" + DiffBal);
       }
     }
+
+    listTransactIns = new ArrayList<>();
+    transactRecyclerAdapterIns = new TransactRecyclerAdapter(listTransactIns);
+
+    RecyclerView.LayoutManager mLayoutManagerIns = new LinearLayoutManager(getApplicationContext());
+    recyclerViewIncomes.setLayoutManager(mLayoutManagerIns);
+    recyclerViewIncomes.setItemAnimator(new DefaultItemAnimator());
+    recyclerViewIncomes.setHasFixedSize(true);
+    recyclerViewIncomes.setAdapter(transactRecyclerAdapterIns);
+
+    listTransactOuts = new ArrayList<>();
+    transactRecyclerAdapterOuts = new TransactRecyclerAdapter(listTransactOuts);
+
+    RecyclerView.LayoutManager mLayoutManagerOuts = new LinearLayoutManager(getApplicationContext());
+    recyclerViewOutcomes.setLayoutManager(mLayoutManagerOuts);
+    recyclerViewOutcomes.setItemAnimator(new DefaultItemAnimator());
+    recyclerViewOutcomes.setHasFixedSize(true);
+    recyclerViewOutcomes.setAdapter(transactRecyclerAdapterOuts);
+
+    getDataFromSQLite();
+  }
+
+  /**
+   * This method is to fetch all user records from SQLite
+   */
+  private void getDataFromSQLite() {
+      // AsyncTask is used that SQLite operation not blocks the UI Thread.
+      new AsyncTask<Void, Void, Void>() {
+          @Override
+          protected Void doInBackground(Void... params) {
+              listTransactIns.clear();
+              listTransactOuts.clear();
+              listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
+              listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
+              return null;
+          }
+
+          @Override
+          protected void onPostExecute(Void aVoid) {
+              super.onPostExecute(aVoid);
+              transactRecyclerAdapterIns.notifyDataSetChanged();
+              transactRecyclerAdapterOuts.notifyDataSetChanged();
+          }
+      }.execute();
   }
 
   /* Custom Methods */

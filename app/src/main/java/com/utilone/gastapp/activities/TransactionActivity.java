@@ -150,7 +150,6 @@ public class TransactionActivity extends AppCompatActivity {
 
     transact = new Transact(periodID, type, day, amnt, category, desc);
 
-
     transactID = databaseHelper.addTransact(transact);
     transact.setId(transactID);
     

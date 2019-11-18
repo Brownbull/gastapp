@@ -905,6 +905,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         transact.setDesc(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DESC)));
         // Adding transact record to list
         transactList.add(transact);
+        Log.i("getAllTransact", transact.toString());
       } while (cursor.moveToNext());
     }
     cursor.close();
