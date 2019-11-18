@@ -293,15 +293,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String sortOrder =
       COLUMN_USER_NAME + " ASC";
     List<User> userList = new ArrayList<User>();
-
-    SQLiteDatabase db = this.getReadableDatabase();
-
+    
     // query the user table
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_USER, //Table to query
       columns,    //columns to return
@@ -374,20 +373,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String[] columns = {
       COLUMN_USER_ID
     };
-    SQLiteDatabase db = this.getReadableDatabase();
-
+    
     // selection criteria
     String selection = COLUMN_USER_EMAIL + " = ?";
-
+    
     // selection argument
     String[] selectionArgs = {email};
-
+    
     // query user table with condition
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_USER,                 //Table to query
       columns,                    //columns to return
@@ -420,19 +419,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String[] columns = {
             COLUMN_USER_ID
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
-
+    
     // selection arguments
     String[] selectionArgs = {email, password};
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_USER,                 //Table to query
       columns,                    //columns to return
@@ -468,19 +467,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         COLUMN_USER_NAME,
         COLUMN_USER_CURRMONTH_ID
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
-
+    
     // selection arguments
     String[] selectionArgs = {email, password};
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_USER,                 //Table to query
       columns,                    //columns to return
@@ -512,19 +511,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         COLUMN_USER_NAME,
         COLUMN_USER_CURRMONTH_ID
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_USER_ID + " = ?";
-
+    
     // selection arguments
     String[] selectionArgs = {String.valueOf(userID)};
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_USER,                 //Table to query
       columns,                    //columns to return
@@ -595,6 +594,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    
     SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_MONTH,                //Table to query
@@ -658,19 +658,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       COLUMN_EXPECTED_MONTHLY_INCOME,
       COLUMN_EXPECTED_MONTHLY_OUTCOME
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_EXPECTED_ID + " = ?" ;
-
+    
     // selection arguments
     String[] selectionArgs = { String.valueOf(expectedID) };
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_EXPECTED,                //Table to query
       columns,                    //columns to return
@@ -798,19 +798,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       COLUMN_PERIOD_BALANCE,
       COLUMN_PERIOD_TRANSACTIONS
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_PERIOD_ID + " = ?" ;
-
+    
     // selection arguments
     String[] selectionArgs = { String.valueOf(periodID) };
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_PERIOD,                //Table to query
       columns,                    //columns to return
@@ -892,12 +892,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     List<Transact> transactList = new ArrayList<Transact>();
 
     SQLiteDatabase db = this.getReadableDatabase();
-
     Cursor cursor = db.query(
       TABLE_TRANSACT, //Table to query
       columns,    //columns to return
       selection,        //columns for the WHERE clause
       selectionArgs,        //The values for the WHERE clause
+      null,       //group the rows
+      null,       //filter by row groups
+      null); //The sort order
+
+
+    // Traversing through all rows and adding to list
+    if (cursor.moveToFirst()) {
+      do {
+        Transact transact = new Transact();
+        transact.setType(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE)));
+        transact.setTransactDay(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DAY))));
+        transact.setAmount(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT))));
+        transact.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_CATEGORY)));
+        transact.setDesc(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DESC)));
+        // Adding transact record to list
+        transactList.add(transact);
+        Log.i("getAllTransact", transact.toString());
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+    db.close();
+
+    // return transact list
+    return transactList;
+  }
+
+  public List<Transact> getAllTransact(long periodID) {
+    Log.i("getAllTransact", "periodID" + periodID);
+    // array of columns to fetch
+    String[] columns = {
+      COLUMN_TRANSACT_TYPE,
+      COLUMN_TRANSACT_DAY,
+      COLUMN_TRANSACT_AMOUNT,
+      COLUMN_TRANSACT_CATEGORY,
+      COLUMN_TRANSACT_DESC
+    };
+    
+    List<Transact> transactList = new ArrayList<Transact>();
+
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.query(
+      TABLE_TRANSACT, //Table to query
+      columns,    //columns to return
+      null,        //columns for the WHERE clause
+      null,        //The values for the WHERE clause
       null,       //group the rows
       null,       //filter by row groups
       null); //The sort order
@@ -939,15 +983,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String sortOrder =
       COLUMN_CATEGORY_ID + " ASC";
     
-    SQLiteDatabase db = this.getReadableDatabase();
-
-    // query the user table
-    /**
-     * Here query function is used to fetch records from user table this function works like we use sql query.
-     * SQL query equivalent to this query function is
-     * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
-     */
-    Cursor cursor = db.query(
+      
+      // query the user table
+      /**
+       * Here query function is used to fetch records from user table this function works like we use sql query.
+       * SQL query equivalent to this query function is
+       * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+       */
+      SQLiteDatabase db = this.getReadableDatabase();
+      Cursor cursor = db.query(
       TABLE_CATEGORY, //Table to query
       columns,    //columns to return
       null,        //columns for the WHERE clause
@@ -964,9 +1008,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToNext();
       }
     }
-    // for( i = 0; i < cursor.getCount() ; i++){
-    //   Log.i("initTransact", "i:" + i + " cats[i]: "+ cats[i]);
-    // }
 
     cursor.close();
     db.close();
@@ -986,14 +1027,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String sortOrder =
       COLUMN_NAMEMONTH_ID + " ASC";
     List<NameMonth> nameMonthList = new ArrayList<NameMonth>();
-    SQLiteDatabase db = this.getReadableDatabase();
-
+    
     // query the user table
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_NAMEMONTH, //Table to query
       columns,    //columns to return
@@ -1029,15 +1070,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // sorting orders
     String sortOrder =
       COLUMN_NAMEMONTH_ID + " ASC";
-    
-    SQLiteDatabase db = this.getReadableDatabase();
-
-    // query the user table
-    /**
-     * Here query function is used to fetch records from user table this function works like we use sql query.
+      
+      // query the user table
+      /**
+       * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_NAMEMONTH, //Table to query
       columns,    //columns to return
@@ -1055,9 +1095,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToNext();
       }
     }
-    // for( i = 0; i < cursor.getCount() ; i++){
-    //   Log.i("initTransact", "i:" + i + " cats[i]: "+ cats[i]);
-    // }
 
     cursor.close();
     db.close();

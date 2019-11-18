@@ -50,6 +50,7 @@ public class PanelActivity extends AppCompatActivity {
   private NameMonth nameMonth;
   private RecyclerView recyclerViewIncomes;
   private RecyclerView recyclerViewOutcomes;
+  private List<Transact> listTransact;
   private List<Transact> listTransactIns;
   private List<Transact> listTransactOuts;
   private TransactRecyclerAdapter transactRecyclerAdapterIns;
@@ -187,6 +188,8 @@ public class PanelActivity extends AppCompatActivity {
       }
     }
 
+    listTransact = new ArrayList<>();
+
     listTransactIns = new ArrayList<>();
     transactRecyclerAdapterIns = new TransactRecyclerAdapter(listTransactIns);
 
@@ -217,18 +220,29 @@ public class PanelActivity extends AppCompatActivity {
       new AsyncTask<Void, Void, Void>() {
           @Override
           protected Void doInBackground(Void... params) {
-              listTransactIns.clear();
-              listTransactOuts.clear();
-              listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
-              listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
-              return null;
+            listTransact.clear();
+            listTransactIns.clear();
+            listTransactOuts.clear();
+            listTransact.addAll(databaseHelper.getAllTransact(user.getCurrMonth()));
+            for (int counter = 0; counter < listTransact.size(); counter++) { 		      
+              // System.out.println(listTransact.get(counter));
+              if (listTransact.get(counter).getType().equals("Income")){
+                listTransactIns.add(listTransact.get(counter));
+              }
+              else if (listTransact.get(counter).getType().equals("Outcome")){
+                listTransactOuts.add(listTransact.get(counter));
+              }
+            }   
+            // listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
+            // listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
+            return null;
           }
 
           @Override
           protected void onPostExecute(Void aVoid) {
-              super.onPostExecute(aVoid);
-              transactRecyclerAdapterIns.notifyDataSetChanged();
-              transactRecyclerAdapterOuts.notifyDataSetChanged();
+            super.onPostExecute(aVoid);
+            transactRecyclerAdapterIns.notifyDataSetChanged();
+            transactRecyclerAdapterOuts.notifyDataSetChanged();
           }
       }.execute();
   }
