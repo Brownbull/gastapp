@@ -572,6 +572,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   public Month getMonth(long monthID) {
     Month month = new Month();
+    int cursorCount = 0;
     // array of columns to fetch
     String[] columns = {
       COLUMN_MONTH_ID,
@@ -582,19 +583,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       COLUMN_MONTH_YEAR,
       COLUMN_MONTH_BALDIFF
     };
-    SQLiteDatabase db = this.getReadableDatabase();
     // selection criteria
     String selection = COLUMN_MONTH_ID + " = ?" ;
-
+    
     // selection arguments
     String[] selectionArgs = { String.valueOf(monthID) };
-
+    
     // query user table with conditions
     /**
      * Here query function is used to fetch records from user table this function works like we use sql query.
      * SQL query equivalent to this query function is
      * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
      */
+    SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursor = db.query(
       TABLE_MONTH,                //Table to query
       columns,                    //columns to return
@@ -603,9 +604,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       null,                       //group the rows
       null,                       //filter by row groups
       null);                      //The sort order
-    int cursorCount = cursor.getCount();
 
-    if (cursorCount > 0 && cursor.moveToFirst()) {
+    if (cursor.moveToFirst()) {
+      cursorCount = cursor.getCount();
       month.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_ID))));
       month.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_USER_ID))));
       month.setPeriodID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_PERIOD_ID))));
@@ -726,7 +727,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     int bal = 0;
     String type;
     int amnt;
-    int howMany;
+    int howMany = 0;
     SQLiteDatabase db = this.getWritableDatabase();
     
     String[] columnsTransact = {
@@ -748,10 +749,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       null,       //group the rows
       null,       //filter by row groups
       null); //The sort order
-    
-    howMany = cursor.getCount();
+
     // Traversing through all rows and adding to list
     if (cursor.moveToFirst()) {
+      Log.i("updateObjects", "if");
+      howMany = cursor.getCount();
       do {
         type = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE));
         amnt = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT)));
@@ -763,20 +765,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           outs = outs + amnt;
         }
       } while (cursor.moveToNext());
+      
+      ContentValues values = new ContentValues();
+      
+      values.put(COLUMN_PERIOD_INCOMES, ins);
+      values.put(COLUMN_PERIOD_OUTCOMES, outs);
+      values.put(COLUMN_PERIOD_BALANCE, ins - outs);
+      values.put(COLUMN_PERIOD_TRANSACTIONS, howMany);
+      // updating row
+      db.update(TABLE_PERIOD, values, COLUMN_PERIOD_ID + " = ?", selectionArgs);
+      cursor.close();
+      db.close();
+
+      return new Period(periodID, ins, outs, ins - outs, howMany );
     }
-    cursor.close();
-
-    ContentValues values = new ContentValues();
-
-    values.put(COLUMN_PERIOD_INCOMES, ins);
-    values.put(COLUMN_PERIOD_OUTCOMES, outs);
-    values.put(COLUMN_PERIOD_BALANCE, ins - outs);
-    values.put(COLUMN_PERIOD_TRANSACTIONS, howMany);
-    // updating row
-    db.update(TABLE_PERIOD, values, COLUMN_PERIOD_ID + " = ?", selectionArgs);
-    db.close();
-
-    return new Period(periodID, ins, outs, ins - outs, howMany );
+    else{
+      Log.i("updateObjects", "else");
+      Period prd = getPeriod(periodID);
+      cursor.close();
+      db.close();
+      return prd;
+    }
   }
 
   public Period getPeriod(long periodID) {

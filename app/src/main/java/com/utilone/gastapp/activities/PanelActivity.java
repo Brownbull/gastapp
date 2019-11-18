@@ -145,6 +145,7 @@ public class PanelActivity extends AppCompatActivity {
   private void updateObjects(){
     // BACK
     month = databaseHelper.getMonth(user.getCurrMonth());
+    Log.i("updateObjects", "month.getPeriodID(): " + month.getPeriodID());
     // period = databaseHelper.getPeriod(month.getPeriodID());
     period = databaseHelper.updatePeriodAmnts(month.getPeriodID());
     expected = databaseHelper.getExpected(month.getExpectedID());
@@ -205,6 +206,7 @@ public class PanelActivity extends AppCompatActivity {
     recyclerViewOutcomes.setAdapter(transactRecyclerAdapterOuts);
 
     getDataFromSQLite();
+
   }
 
   /**
