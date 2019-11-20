@@ -138,7 +138,8 @@
           android:gravity="center"
           android:textAppearance="@style/TextAppearance.AppCompat.Display2"
           android:textColor="@color/colorYearFont"
-          android:textStyle="bold" />
+          android:textStyle="bold"
+            android:visibility="gone"/>
 
       </LinearLayout>
 
