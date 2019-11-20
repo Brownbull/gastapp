@@ -250,6 +250,21 @@ public class PanelActivity extends AppCompatActivity {
     recyclerViewIncomes.setHasFixedSize(true);
     recyclerViewIncomes.setAdapter(transactRecyclerAdapterIns);
 
+    recyclerViewIncomes.addOnItemTouchListener(
+    new RecyclerItemClickListener(getApplicationContext(), recyclerViewIncomes ,new RecyclerItemClickListener.OnItemClickListener() {
+      @Override public void onItemClick(View view, int position) {
+        // do whatever
+        Log.i("RecyclerItemClickListener", "onItemClick position " + position);
+        Log.i("RecyclerItemClickListener", "onItemClick listTransactIns " + listTransactIns.get(position).toString());
+        startTransaction(view, listTransactIns.get(position));
+
+      }
+      @Override public void onLongItemClick(View view, int position) {
+        // do whatever
+        Log.i("RecyclerItemClickListener", "onLongItemClick position " + position);
+      }
+    }));
+
     listTransactOuts = new ArrayList<>();
     transactRecyclerAdapterOuts = new TransactRecyclerAdapter(listTransactOuts);
 
@@ -258,6 +273,23 @@ public class PanelActivity extends AppCompatActivity {
     recyclerViewOutcomes.setItemAnimator(new DefaultItemAnimator());
     recyclerViewOutcomes.setHasFixedSize(true);
     recyclerViewOutcomes.setAdapter(transactRecyclerAdapterOuts);
+
+    recyclerViewOutcomes.addOnItemTouchListener(
+      new RecyclerItemClickListener(getApplicationContext(), recyclerViewIncomes ,new RecyclerItemClickListener.OnItemClickListener() {
+        @Override public void onItemClick(View view, int position) {
+          // do whatever
+          Log.i("RecyclerItemClickListener", "onItemClick position " + position);
+          Log.i("RecyclerItemClickListener", "onItemClick listTransactOuts " + listTransactOuts.get(position).toString());
+          startTransaction(view, listTransactOuts.get(position));
+  
+        }
+        @Override public void onLongItemClick(View view, int position) {
+          // do whatever
+          Log.i("RecyclerItemClickListener", "onLongItemClick position " + position);
+        }
+      }));
+  
+
     getDataFromSQLite(period.getTransactions());
 
     Log.i("updateObjects", "END FUNCTION");
@@ -341,9 +373,37 @@ public class PanelActivity extends AppCompatActivity {
     transactionIntent.putExtra("MONTHNAME", month.getMonth());
     Log.i("startTransaction", "MONTH: " + month.toString());
     transactionIntent.putExtra("EXPECTEDID", String.valueOf(expected.getId()));
+
+    transactionIntent.putExtra("TRANSACTID", String.valueOf(transact.getId()));
     transactionIntent.putExtra("PERIODID", String.valueOf(period.getId()));
+    transactionIntent.putExtra("TRANSACTTYPE", String.valueOf(transact.getType()));
+    transactionIntent.putExtra("TRANSACTDAY", String.valueOf(transact.getTransactDay()));
+    transactionIntent.putExtra("TRANSACTAMNT", String.valueOf(transact.getAmount()));
+    transactionIntent.putExtra("TRANSACTCATEGORY", String.valueOf(transact.getCategory()));
+    transactionIntent.putExtra("TRANSACTDESC", String.valueOf(transact.getDesc()));
+
     startActivity(transactionIntent);
   }
+
+  public void startTransaction(View view, Transact transact) {
+    Intent transactionIntent = new Intent(activity, TransactionActivity.class);
+    transactionIntent.putExtra("USERID", String.valueOf(user.getId()));
+    transactionIntent.putExtra("MONTHID", String.valueOf(month.getId()));
+    transactionIntent.putExtra("MONTHNAME", month.getMonth());
+    Log.i("startTransaction", "MONTH: " + month.toString());
+    transactionIntent.putExtra("EXPECTEDID", String.valueOf(expected.getId()));
+    
+    transactionIntent.putExtra("TRANSACTID", String.valueOf(transact.getId()));
+    transactionIntent.putExtra("PERIODID", String.valueOf(period.getId()));
+    transactionIntent.putExtra("TRANSACTTYPE", String.valueOf(transact.getType()));
+    transactionIntent.putExtra("TRANSACTDAY", String.valueOf(transact.getTransactDay()));
+    transactionIntent.putExtra("TRANSACTAMNT", String.valueOf(transact.getAmount()));
+    transactionIntent.putExtra("TRANSACTCATEGORY", String.valueOf(transact.getCategory()));
+    transactionIntent.putExtra("TRANSACTDESC", String.valueOf(transact.getDesc()));
+
+    startActivity(transactionIntent);
+  }
+
 
   public void toggleIns(View view){
     Log.i("toggleIns", "flag: " + llins.getVisibility());

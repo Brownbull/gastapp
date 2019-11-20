@@ -48,6 +48,7 @@ public class TransactionActivity extends AppCompatActivity {
   int amnt;
   int day;
   String desc;
+  String temp;
 
   // FRONTEND
   private EditText edtDay;
@@ -65,19 +66,33 @@ public class TransactionActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_transaction);
-
+    
     Intent Panel = getIntent();
-    String tempUserID = Panel.getStringExtra("USERID");
-    userID = Long.valueOf(tempUserID);
-    String tempMonthID = Panel.getStringExtra("MONTHID");
-    monthID = Long.valueOf(tempMonthID);
+    temp = Panel.getStringExtra("USERID");
+    userID = Long.valueOf(temp);
+    temp = Panel.getStringExtra("MONTHID");
+    monthID = Long.valueOf(temp);
     monthName = Panel.getStringExtra("MONTHNAME");
     Log.i("TransactionActivity", "monthName: " + monthName);
-    String tempExpectedID = Panel.getStringExtra("EXPECTEDID");
-    expectedID = Long.valueOf(tempExpectedID);
-    String tempPeriodID = Panel.getStringExtra("PERIODID");
-    periodID = Long.valueOf(tempPeriodID);
+    temp = Panel.getStringExtra("EXPECTEDID");
+    expectedID = Long.valueOf(temp);
+    temp = Panel.getStringExtra("PERIODID");
+    periodID = Long.valueOf(temp);
+    
+    transact = new Transact();
+    temp = Panel.getStringExtra("TRANSACTID");
+    transact.setId(Long.valueOf(temp));
+    transact.setPeriodID(periodID);
+    transact.setType(Panel.getStringExtra("TRANSACTTYPE"));
+    temp = Panel.getStringExtra("TRANSACTDAY");
+    transact.setTransactDay(Integer.parseInt(temp));
+    temp = Panel.getStringExtra("TRANSACTAMNT");
+    transact.setAmount(Integer.parseInt(temp));
+    transact.setCategory(Panel.getStringExtra("TRANSACTCATEGORY"));
+    transact.setDesc(Panel.getStringExtra("TRANSACTDESC"));
 
+    Log.i("TransactionActivity onCreate", "TRANSACT: " + transact.toString());
+  
     Log.i("TransactionActivity","cyear: " + cyear);
     Log.i("TransactionActivity","cmonth: " + cmonth);
     Log.i("TransactionActivity","cday: " + cday);
@@ -127,6 +142,27 @@ public class TransactionActivity extends AppCompatActivity {
     type = "Outcome";
     btnTrOutcome.setBackgroundResource(R.drawable.outcome_radius);
     btnTrIncome.setBackgroundResource(R.drawable.inactive_radius);
+
+    if(transact.getId() != -16){
+      if(transact.getType().equals("Income")){
+        type = "Income";
+        btnTrIncome.setBackgroundResource(R.drawable.income_radius);
+        btnTrOutcome.setBackgroundResource(R.drawable.inactive_radius);
+      }else if (transact.getType().equals("Outcome")){
+        type = "Outcome";
+        btnTrOutcome.setBackgroundResource(R.drawable.outcome_radius);
+        btnTrIncome.setBackgroundResource(R.drawable.inactive_radius);
+      }
+      
+      edtTrAmnt.setText(transact.getAmountStr());
+      int spinnerPosition = adapterCategories.getPosition(transact.getCategory());
+      //set the default according to value
+      spinnerCategories.setSelection(spinnerPosition);
+
+      edtTrDesc.setText(transact.getDesc());
+      edtDay.setText(transact.getTransactDayStr());
+    }
+
   }
 
   public void setIncome(View view){
@@ -142,20 +178,33 @@ public class TransactionActivity extends AppCompatActivity {
   }
 
   public void addCurrentTransact(View view){
-    String value;
-    value = edtTrAmnt.getText().toString();
-    amnt = Integer.parseInt(value);
+    temp = edtTrAmnt.getText().toString();
+    amnt = Integer.parseInt(temp);
     category = spinnerCategories.getSelectedItem().toString();
     desc = edtTrDesc.getText().toString();
-    value = edtDay.getText().toString();
-    day = Integer.parseInt(value);
+    temp = edtDay.getText().toString();
+    day = Integer.parseInt(temp);
 
-    transact = new Transact(periodID, type, day, amnt, category, desc);
+    if (transact.getId() == -16){
+      transact = new Transact(periodID, type, day, amnt, category, desc);
 
-    transactID = databaseHelper.addTransact(transact);
-    transact.setId(transactID);
-    
-    Log.i("addCurrentTransact", "transact: " + transact.toString());
+      transactID = databaseHelper.addTransact(transact);
+      transact.setId(transactID);
+
+      Log.i("addCurrentTransact NEW", "transact: " + transact.toString());
+    }
+    else {
+      Log.i("addCurrentTransact UPD PRE", "transact: " + transact.toString());
+      transact.setType(type);
+      transact.setTransactDay(day);
+      transact.setAmount(amnt);
+      transact.setCategory(category);
+      transact.setDesc(desc);
+      databaseHelper.updateTransact(transact);
+
+      Log.i("addCurrentTransact UPD POST", "transact: " + transact.toString());
+    }
+
     finish();
   }
 }

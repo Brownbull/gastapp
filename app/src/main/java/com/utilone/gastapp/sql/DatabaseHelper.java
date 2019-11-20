@@ -947,12 +947,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     return Long.valueOf(id);
   }
 
+  public void updateTransact(Transact transact) {
+    SQLiteDatabase db = this.getWritableDatabase();
+
+    ContentValues values = new ContentValues();
+    values.put(COLUMN_TRANSACT_TYPE, transact.getType());
+    values.put(COLUMN_TRANSACT_DAY, transact.getTransactDay());
+    values.put(COLUMN_TRANSACT_AMOUNT, transact.getAmount());
+    values.put(COLUMN_TRANSACT_CATEGORY, transact.getCategory());
+    values.put(COLUMN_TRANSACT_DESC, transact.getDesc());
+    // updating row
+    db.update(TABLE_TRANSACT, values, COLUMN_TRANSACT_ID + " = ?",
+            new String[]{String.valueOf(transact.getId())});
+    Log.i("updateTransact", transact.toString());
+    db.close();
+  }
+
   public List<Transact> getAllTransact(long periodID, String type) {
     Transact transact = new Transact();
     Log.i("getAllTransact1", "periodID" + periodID);
     Log.i("getAllTransact1", "type" + type);
     // array of columns to fetch
     String[] columns = {
+      COLUMN_TRANSACT_ID,
+      COLUMN_TRANSACT_PERIOD_ID,
       COLUMN_TRANSACT_TYPE,
       COLUMN_TRANSACT_DAY,
       COLUMN_TRANSACT_AMOUNT,
@@ -982,6 +1000,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     if (cursor.moveToFirst()) {
       Log.i("getAllTransact1", "FOUND");
       do {
+        transact.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_ID))));
+        transact.setPeriodID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_PERIOD_ID))));
         transact.setType(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE)));
         transact.setTransactDay(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DAY))));
         transact.setAmount(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT))));

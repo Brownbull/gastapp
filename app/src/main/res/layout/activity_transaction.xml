@@ -38,7 +38,7 @@
 
       <EditText
           android:id="@+id/edt_day"
-          android:layout_width="wrap_content"
+          android:layout_width="70dp"
           android:layout_height="wrap_content"
           android:layout_margin="12dp"
           android:layout_weight="1"
@@ -52,7 +52,9 @@
           android:textColor="#0D0E0F"
           android:textColorHint="#00070606"
           android:textSize="22sp"
-          android:textStyle="bold" />
+          android:textStyle="bold"
+          android:selectAllOnFocus="true"
+          />
 
       <TextView
         android:id="@+id/tv_month"
@@ -115,7 +117,9 @@
       android:hint="1000"
       android:inputType="number"
       android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-      android:textColorHint="@color/colorYearFont" />
+      android:textColorHint="@color/colorYearFont"
+      android:selectAllOnFocus="true"
+        />
     </LinearLayout>
 
     <LinearLayout
@@ -200,7 +204,9 @@
       android:ems="10"
       android:hint="Description (Optional)"
       android:inputType="textPersonName"
-      android:textColorHint="@color/cardview_dark_background" />
+      android:textColorHint="@color/cardview_dark_background"
+      android:selectAllOnFocus="true"
+        />
 
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

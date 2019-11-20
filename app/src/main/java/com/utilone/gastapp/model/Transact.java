@@ -29,6 +29,16 @@ public class Transact {
     this.desc = "";
   }
 
+  public Transact(long id, long periodID,  String type,  int transactDay,  int amount,  String category,  String desc){
+    this.id = id;
+    this.periodID = periodID;
+    this.type = type;
+    this.transactDay = transactDay;
+    this.amount = amount;
+    this.category = category;
+    this.desc = desc;
+  }
+
   public Transact(long periodID,  String type,  int transactDay,  int amount,  String category,  String desc){
     this.id = -16;
     this.periodID = periodID;
