@@ -42,19 +42,38 @@
           android:gravity="center"
           android:orientation="horizontal">
 
-          <TextView
-            android:id="@+id/tv_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:background="@drawable/month_radius"
-            android:paddingLeft="12dp"
-            android:paddingTop="5dp"
-            android:paddingRight="12dp"
-            android:paddingBottom="5dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="@color/colorMonthFont"
-            android:textStyle="bold" />
+<!--          <TextView-->
+<!--            android:id="@+id/tv_month"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="12dp"-->
+<!--            android:background="@drawable/month_radius"-->
+<!--            android:paddingLeft="12dp"-->
+<!--            android:paddingTop="5dp"-->
+<!--            android:paddingRight="12dp"-->
+<!--            android:paddingBottom="5dp"-->
+<!--            android:textAppearance="@style/TextAppearance.AppCompat.Display1"-->
+<!--            android:textColor="@color/colorMonthFont"-->
+<!--            android:textStyle="bold" />-->
+
+
+          <Spinner
+              android:id="@+id/spinner_months"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_margin="12dp"
+              android:background="@drawable/month_radius"
+              android:gravity="center"
+              android:paddingLeft="12dp"
+              android:paddingTop="5dp"
+              android:paddingRight="12dp"
+              android:paddingBottom="5dp"
+              android:popupBackground="@drawable/year_radius"
+              android:spinnerMode="dropdown"
+              android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+              android:textColor="@color/colorMonthFont"
+              android:textStyle="bold" />
+
 
           <TextView
             android:id="@+id/tv_year"
@@ -170,20 +189,20 @@
           android:textStyle="bold" />
 
 
-        <TextView
-          android:id="@+id/tv_confirm_income"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:gravity="center"
-          android:onClick="setIncome"
-          android:paddingLeft="20dp"
-          android:paddingTop="3dp"
-          android:paddingRight="20dp"
-          android:paddingBottom="3dp"
-          android:text="?"
-          android:textColor="@color/colorBlack"
-          android:textSize="35dp"
-          android:textStyle="bold" />
+<!--        <TextView-->
+<!--          android:id="@+id/tv_confirm_income"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="match_parent"-->
+<!--          android:gravity="center"-->
+<!--          android:onClick="setIncome"-->
+<!--          android:paddingLeft="20dp"-->
+<!--          android:paddingTop="3dp"-->
+<!--          android:paddingRight="20dp"-->
+<!--          android:paddingBottom="3dp"-->
+<!--          android:text="?"-->
+<!--          android:textColor="@color/colorBlack"-->
+<!--          android:textSize="35dp"-->
+<!--          android:textStyle="bold" />-->
 
       </LinearLayout>
 
@@ -248,20 +267,20 @@
           android:textSize="20dp"
           android:textStyle="bold" />
 
-        <TextView
-          android:id="@+id/tv_confirm_outcome"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:gravity="center"
-          android:onClick="setOutcome"
-          android:paddingLeft="20dp"
-          android:paddingTop="3dp"
-          android:paddingRight="20dp"
-          android:paddingBottom="3dp"
-          android:text="?"
-          android:textColor="@color/colorBlack"
-          android:textSize="35dp"
-          android:textStyle="bold" />
+<!--        <TextView-->
+<!--          android:id="@+id/tv_confirm_outcome"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="match_parent"-->
+<!--          android:gravity="center"-->
+<!--          android:onClick="setOutcome"-->
+<!--          android:paddingLeft="20dp"-->
+<!--          android:paddingTop="3dp"-->
+<!--          android:paddingRight="20dp"-->
+<!--          android:paddingBottom="3dp"-->
+<!--          android:text="?"-->
+<!--          android:textColor="@color/colorBlack"-->
+<!--          android:textSize="35dp"-->
+<!--          android:textStyle="bold" />-->
 
       </LinearLayout>
 

@@ -57,4 +57,15 @@ public class Period {
   public void setTransactions(int transactions) {
       this.transactions = transactions;
   }
+
+  @Override
+  public String toString() {
+    return "Period{" +
+            "id=" + id +
+            ", incomes=" + incomes +
+            ", outcomes=" + outcomes +
+            ", balance=" + balance +
+            ", transactions=" + transactions +
+            '}';
+  }
 }

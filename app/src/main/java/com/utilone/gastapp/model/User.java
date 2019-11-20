@@ -68,4 +68,15 @@ public class User {
   public void setCurrMonth(long currmonthID) {
       this.currmonthID = currmonthID;
   }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", currmonthID=" + currmonthID +
+            '}';
+  }
 }

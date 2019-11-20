@@ -345,6 +345,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       // updating row
       db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
               new String[]{String.valueOf(user.getId())});
+      Log.i("updateUser", user.toString());
       db.close();
   }
 
@@ -550,7 +551,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   // METHODS END - USER
 
   // METHODS INI - MONTH
-  public long addMonth(long userID, String month, int year) {
+  public Month addMonth(long userID, String cmonth, int cyear) {
+
     long id;
     long periodID = newPeriodID();
     long expectedID = newExpectedID();
@@ -559,17 +561,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     values.put(COLUMN_MONTH_USER_ID, userID);
     values.put(COLUMN_MONTH_PERIOD_ID, periodID);
     values.put(COLUMN_MONTH_EXPECTED_ID, expectedID);
-    values.put(COLUMN_MONTH_NAME, month);
-    values.put(COLUMN_MONTH_YEAR, year);
+    values.put(COLUMN_MONTH_NAME, cmonth);
+    values.put(COLUMN_MONTH_YEAR, cyear);
     values.put(COLUMN_MONTH_BALDIFF, 0);
 
     // Inserting Row
     id = db.insert(TABLE_MONTH, null, values);
     db.close();
-    return id;
+    Month month = new Month(id, userID, periodID, expectedID, cmonth, cyear, 0);
+    Log.i("addMonth", month.toString());
+    return month;
   }
 
+  public Month getOrAddMonth(long userID, String cmonth, int cyear) {
+    Log.i("getOrAddMonth", "userID: " + userID);
+    Log.i("getOrAddMonth", "cmonth: " + cmonth);
+    Log.i("getOrAddMonth", "cyear: " + cyear);
+    Month month = new Month();
+    int cursorCount = 0;
+    // array of columns to fetch
+    String[] columns = {
+      COLUMN_MONTH_ID,
+      COLUMN_MONTH_USER_ID,
+      COLUMN_MONTH_PERIOD_ID,
+      COLUMN_MONTH_EXPECTED_ID,
+      COLUMN_MONTH_NAME,
+      COLUMN_MONTH_YEAR,
+      COLUMN_MONTH_BALDIFF
+    };
+    // selection criteria
+    String selection = COLUMN_MONTH_USER_ID + " = ?" + " AND " + COLUMN_MONTH_NAME + " = ?" + " AND " + COLUMN_MONTH_YEAR + " = ?";
+    
+    // selection arguments
+    String[] selectionArgs = { String.valueOf(userID), cmonth, String.valueOf(cyear) };
+    
+    // query user table with conditions
+    /**
+     * Here query function is used to fetch records from user table this function works like we use sql query.
+     * SQL query equivalent to this query function is
+     * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
+     */
+    
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = db.query(
+      TABLE_MONTH,                //Table to query
+      columns,                    //columns to return
+      selection,                  //columns for the WHERE clause
+      selectionArgs,              //The values for the WHERE clause
+      null,                       //group the rows
+      null,                       //filter by row groups
+      null);                      //The sort order
+
+    if (cursor.moveToFirst()) {
+      Log.i("getOrAddMonth", "Month finded");
+      cursorCount = cursor.getCount();
+      month.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_ID))));
+      month.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_USER_ID))));
+      month.setPeriodID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_PERIOD_ID))));
+      month.setExpectedID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_EXPECTED_ID))));
+      month.setMonth(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_NAME)));
+      month.setYear(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_YEAR))));
+      month.setBalDiff(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_BALDIFF))));
+    }
+    else{
+      Log.i("getOrAddMonth", "Month NOT finded");
+      month = addMonth(userID, cmonth, cyear);
+    }
+    cursor.close();
+    db.close();
+    
+    Log.i("getOrAddMonth", "MONTH return" + month.toString());
+    return month;
+  }
+
+
   public Month getMonth(long monthID) {
+    Log.i("getMonth", "monthID: " + monthID);
     Month month = new Month();
     int cursorCount = 0;
     // array of columns to fetch
@@ -606,6 +673,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       null);                      //The sort order
 
     if (cursor.moveToFirst()) {
+      Log.i("getMonth", "Month finded");
       cursorCount = cursor.getCount();
       month.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_ID))));
       month.setUserID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_USER_ID))));
@@ -615,9 +683,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       month.setYear(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_YEAR))));
       month.setBalDiff(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_MONTH_BALDIFF))));
     }
+    else{
+      Log.i("getMonth", "Month NOT finded");
+    }
     cursor.close();
     db.close();
-
+    
+    Log.i("getMonth", "MONTH return" + month.toString());
     return month;
   }
   // METHODS END - MONTH
@@ -752,7 +824,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Traversing through all rows and adding to list
     if (cursor.moveToFirst()) {
-      Log.i("updateObjects", "if");
+      Log.i("updatePeriodAmnts", "Transactions found");
       howMany = cursor.getCount();
       do {
         type = cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE));
@@ -776,14 +848,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       db.update(TABLE_PERIOD, values, COLUMN_PERIOD_ID + " = ?", selectionArgs);
       cursor.close();
       db.close();
-
+      
       return new Period(periodID, ins, outs, ins - outs, howMany );
     }
     else{
-      Log.i("updateObjects", "else");
+      Log.i("updatePeriodAmnts", "Transactions NOT found");
       Period prd = getPeriod(periodID);
       cursor.close();
       db.close();
+
+      Log.i("updatePeriodAmnts", "PERIOD return " + prd.toString());
       return prd;
     }
   }
@@ -874,7 +948,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   }
 
   public List<Transact> getAllTransact(long periodID, String type) {
-    Log.i("getAllTransact", "periodID" + periodID);
+    Transact transact = new Transact();
+    Log.i("getAllTransact1", "periodID" + periodID);
+    Log.i("getAllTransact1", "type" + type);
     // array of columns to fetch
     String[] columns = {
       COLUMN_TRANSACT_TYPE,
@@ -904,8 +980,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Traversing through all rows and adding to list
     if (cursor.moveToFirst()) {
+      Log.i("getAllTransact1", "FOUND");
       do {
-        Transact transact = new Transact();
         transact.setType(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE)));
         transact.setTransactDay(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DAY))));
         transact.setAmount(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT))));
@@ -913,8 +989,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         transact.setDesc(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DESC)));
         // Adding transact record to list
         transactList.add(transact);
-        Log.i("getAllTransact", transact.toString());
+        Log.i("getAllTransact1", transact.toString());
       } while (cursor.moveToNext());
+      Log.i("getAllTransact1", "Last Transact " + transact.toString());
+    }else{
+      Log.i("getAllTransact1", "NOT FOUND");
     }
     cursor.close();
     db.close();
@@ -924,7 +1003,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   }
 
   public List<Transact> getAllTransact(long periodID) {
-    Log.i("getAllTransact", "periodID" + periodID);
+    Transact transact = new Transact();
+    Log.i("getAllTransact2", "periodID" + periodID);
     // array of columns to fetch
     String[] columns = {
       COLUMN_TRANSACT_TYPE,
@@ -950,7 +1030,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Traversing through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
-        Transact transact = new Transact();
+        Log.i("getAllTransact2", "FOUND");
         transact.setType(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_TYPE)));
         transact.setTransactDay(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_DAY))));
         transact.setAmount(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TRANSACT_AMOUNT))));
@@ -960,6 +1040,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         transactList.add(transact);
         Log.i("getAllTransact", transact.toString());
       } while (cursor.moveToNext());
+      Log.i("getAllTransact2", "Last Transact " + transact.toString());
+    } else{
+      Log.i("getAllTransact2", "NOT FOUND");
     }
     cursor.close();
     db.close();

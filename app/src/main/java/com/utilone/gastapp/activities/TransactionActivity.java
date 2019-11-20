@@ -118,6 +118,8 @@ public class TransactionActivity extends AppCompatActivity {
     spinnerCategories.setAdapter(adapterCategories);
 
     // OTHER INITS
+    edtDay.setTextSize(20);
+    edtDay.setBackgroundResource(R.drawable.month_radius);;
     edtDay.setText(String.valueOf(cday));
     tvYear.setText(String.valueOf(cyear));
     btnTrIncome.setText("Income");

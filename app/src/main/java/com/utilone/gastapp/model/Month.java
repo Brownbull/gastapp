@@ -19,6 +19,16 @@ public class Month {
     this.balDiff = 0;
   }
 
+  public Month(long id, long userID, long periodID, long expectedID, String month, int year, int balDiff) {
+    this.id = id;
+    this.userID = userID;
+    this.periodID = periodID;
+    this.expectedID = expectedID;
+    this.month = month;
+    this.year = year;
+    this.balDiff = balDiff;
+  }
+
   public long getId() {
     return id;
   }
@@ -66,5 +76,18 @@ public class Month {
   }
   public void setBalDiff(int balDiff) {
       this.balDiff = balDiff;
+  }
+
+  @Override
+  public String toString() {
+    return "Month{" +
+            "id=" + id +
+            ", userID=" + userID +
+            ", periodID=" + periodID +
+            ", expectedID=" + expectedID +
+            ", month='" + month + '\'' +
+            ", year=" + year +
+            ", balDiff=" + balDiff +
+            '}';
   }
 }

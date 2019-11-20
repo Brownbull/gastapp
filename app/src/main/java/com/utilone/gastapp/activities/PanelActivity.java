@@ -1,6 +1,7 @@
 package com.utilone.gastapp.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,7 @@ public class PanelActivity extends AppCompatActivity {
   long userID;
   String email;
   int DiffBal;
+  String cmonthName;
   private User user;
   private Month month;
   private Expected expected;
@@ -55,21 +60,24 @@ public class PanelActivity extends AppCompatActivity {
   private List<Transact> listTransactOuts;
   private TransactRecyclerAdapter transactRecyclerAdapterIns;
   private TransactRecyclerAdapter transactRecyclerAdapterOuts;
+  String[] monthNames;
+  ArrayAdapter<String> adapterMonths;
   
   // FRONTEND
-  private TextView tvMonth;
+  // private TextView tvMonth;
   private TextView tvYear;
   private TextView tvCurrBalance;
   private TextView tvDiffBalance;
   private LinearLayout llIncome;
   private LinearLayout llins;
   private EditText edtIncomeAmnt;
-  private TextView tvConfirmIncome;
+//  private TextView tvConfirmIncome;
   private LinearLayout llOutcome;
   private LinearLayout llouts;
   private EditText edtOutcomeAmnt;
-  private TextView tvConfirmOutcome;
+//  private TextView tvConfirmOutcome;
   private Button btnTransaction;
+  private Spinner spinnerMonths;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -88,27 +96,61 @@ public class PanelActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    updateObjects();
+    if (user.getCurrMonth() != -16){
+      Log.i("onResume", "USER" + user.toString());
+      Log.i("onResume", "MONTH" + month.toString());
+      updateObjects();
+    }
   }
 
   /**
    * This method is to initialize views
    */
   private void initViews() {
-    tvMonth = (TextView) findViewById(R.id.tv_month);
+    // tvMonth = (TextView) findViewById(R.id.tv_month);
     tvYear = (TextView) findViewById(R.id.tv_year);
     tvCurrBalance = (TextView) findViewById(R.id.tv_CurrBalance);
     tvDiffBalance = (TextView) findViewById(R.id.tv_DiffBalance);
     llIncome = (LinearLayout) findViewById(R.id.ll_income);
     llins = (LinearLayout) findViewById(R.id.llins);
     edtIncomeAmnt = (EditText) findViewById(R.id.edt_income_amnt);
-    tvConfirmIncome = (TextView) findViewById(R.id.tv_confirm_income);
+//    tvConfirmIncome = (TextView) findViewById(R.id.tv_confirm_income);
     llOutcome = (LinearLayout) findViewById(R.id.ll_outcome);
     llouts = (LinearLayout) findViewById(R.id.llouts);
     edtOutcomeAmnt = (EditText) findViewById(R.id.edt_outcome_amnt);
-    tvConfirmOutcome = (TextView) findViewById(R.id.tv_confirm_outcome);
+//    tvConfirmOutcome = (TextView) findViewById(R.id.tv_confirm_outcome);
     recyclerViewIncomes = (RecyclerView) findViewById(R.id.recyclerViewIncomes);
     recyclerViewOutcomes = (RecyclerView) findViewById(R.id.recyclerViewOutcomes);
+    spinnerMonths = (Spinner) findViewById(R.id.spinner_months);
+
+    spinnerMonths.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+        // your code here
+        ((TextView) parentView.getChildAt(0)).setTextColor(Color.BLUE);
+        ((TextView) parentView.getChildAt(0)).setTextSize(20);
+        Log.i("onItemSelected", "INIT FUNC");
+        Log.i("onItemSelected", "id: " + id);
+        Log.i("initViews", "onItemSelected USER PRE" + user.toString());
+        cmonthName = nameMonthList.get((int)id).getDesc();
+        Log.i("onItemSelected", "cmonthName: " + cmonthName);
+        month = databaseHelper.getOrAddMonth(userID, cmonthName, cyear);
+        user.setCurrMonth(month.getId());
+        databaseHelper.updateUser(user);
+        Log.i("initViews", "onItemSelected USER POST" + user.toString());
+        Log.i("initViews", "onItemSelected MONTH" + month.toString());
+        // initObjects(userID);
+        updateObjects();
+        Log.i("onItemSelected", "END FUNC");
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parentView) {
+        // your code here
+        Log.i("initViews", "onNothingSelected");
+      }
+
+    });
   }
 
   /**
@@ -120,57 +162,63 @@ public class PanelActivity extends AppCompatActivity {
     user = databaseHelper.getUser(userID);
     transact = new Transact();
 
+    monthNames = databaseHelper.getAllNameMonthStrings();
+    adapterMonths = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthNames);
+    spinnerMonths.setAdapter(adapterMonths);
+
     
     // NEW USER
     if (user.getCurrMonth() == -16){
-      Log.i("initPanel", "if case");
-      String cmonthName = nameMonthList.get(cmonth + 1).getDesc();
-      user.setCurrMonth(databaseHelper.addMonth(userID, cmonthName, cyear));
+      Log.i("initObjects", "NEW USER");
+      cmonthName = nameMonthList.get(cmonth + 1).getDesc();
+      month = databaseHelper.addMonth(userID, cmonthName, cyear);
+      user.setCurrMonth(month.getId());
       databaseHelper.updateUser(user);
       updateObjects(); 
     }
     // OLD USER
     else {
-      Log.i("initPanel", "else case");
+      Log.i("initObjects", "OLD USER");
       updateObjects();
     }
   } // eof initObjects
 
-  /**
-   * This method is to initialize listeners
-   */
-//  private void initListeners() {
-//    btnTransaction.setOnClickListener((Button.OnClickListener) this);
-//  }
+  private void initMonth(long userID, long monthID) {
+    nameMonthList = databaseHelper.getAllNameMonth();
+    cmonthName = nameMonthList.get(((int)monthID) ).getDesc();
+    month = databaseHelper.addMonth(userID, cmonthName, cyear);
+    user.setCurrMonth(month.getId());
+    databaseHelper.updateUser(user);
+    updateObjects(); 
+  } // eof initMonth
 
   private void updateObjects(){
+    Log.i("updateObjects", "INIT FUNCTION");
     // BACK
     month = databaseHelper.getMonth(user.getCurrMonth());
-    Log.i("updateObjects", "month.getPeriodID(): " + month.getPeriodID());
+    Log.i("updateObjects", "MONTH: " + month.toString());
     // period = databaseHelper.getPeriod(month.getPeriodID());
     period = databaseHelper.updatePeriodAmnts(month.getPeriodID());
+    Log.i("updateObjects", "PERIOD: " + period.toString());
     expected = databaseHelper.getExpected(month.getExpectedID());
-
-
-    // FRONT
-    tvMonth.setText(month.getMonth());
-    tvYear.setText(String.valueOf(month.getYear()));
-    Log.i("updateObjects", "period.getBalance(): " + period.getBalance());
     
-    if (period.getIncomes() > 0){
-      edtIncomeAmnt.setEnabled(false);
-      edtIncomeAmnt.setText("$ " + period.getIncomes());
-      llIncome.setBackgroundResource(R.drawable.income_radius);
-      tvConfirmIncome.setTextSize(20);
-      tvConfirmIncome.setText("✔");
-    }
-    if (period.getOutcomes() > 0){
-      edtOutcomeAmnt.setEnabled(false);
-      edtOutcomeAmnt.setText("$ " + period.getOutcomes());
-      llOutcome.setBackgroundResource(R.drawable.outcome_radius);
-      tvConfirmOutcome.setTextSize(20);
-      tvConfirmOutcome.setText("✔");
-    }
+    int spinnerPosition = adapterMonths.getPosition(month.getMonth());
+    
+    //set the default according to value
+    spinnerMonths.setSelection(spinnerPosition);
+    
+    // FRONT
+    // tvMonth.setText(month.getMonth());
+    tvYear.setText(String.valueOf(month.getYear()));
+    
+    edtIncomeAmnt.setEnabled(false);
+
+    edtIncomeAmnt.setText("$ " + period.getIncomes());
+    llIncome.setBackgroundResource(R.drawable.income_radius);
+
+    edtOutcomeAmnt.setEnabled(false);
+    edtOutcomeAmnt.setText("$ " + period.getOutcomes());
+    llOutcome.setBackgroundResource(R.drawable.outcome_radius);
 
     if (period.getBalance() == -16){
       tvCurrBalance.setText("$ ?");
@@ -207,44 +255,47 @@ public class PanelActivity extends AppCompatActivity {
     recyclerViewOutcomes.setItemAnimator(new DefaultItemAnimator());
     recyclerViewOutcomes.setHasFixedSize(true);
     recyclerViewOutcomes.setAdapter(transactRecyclerAdapterOuts);
+    getDataFromSQLite(period.getTransactions());
 
-    getDataFromSQLite();
+    Log.i("updateObjects", "END FUNCTION");
 
   }
 
   /**
    * This method is to fetch all user records from SQLite
    */
-  private void getDataFromSQLite() {
-      // AsyncTask is used that SQLite operation not blocks the UI Thread.
-      new AsyncTask<Void, Void, Void>() {
-          @Override
-          protected Void doInBackground(Void... params) {
-            listTransact.clear();
-            listTransactIns.clear();
-            listTransactOuts.clear();
-            listTransact.addAll(databaseHelper.getAllTransact(user.getCurrMonth()));
-            for (int counter = 0; counter < listTransact.size(); counter++) { 		      
-              // System.out.println(listTransact.get(counter));
-              if (listTransact.get(counter).getType().equals("Income")){
-                listTransactIns.add(listTransact.get(counter));
-              }
-              else if (listTransact.get(counter).getType().equals("Outcome")){
-                listTransactOuts.add(listTransact.get(counter));
-              }
-            }   
-            // listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
-            // listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
-            return null;
-          }
+  private void getDataFromSQLite(final int transactCounter) {
+    // AsyncTask is used that SQLite operation not blocks the UI Thread.
+    new AsyncTask<Void, Void, Void>() {
+      @Override
+      protected Void doInBackground(Void... params) {
+        listTransact.clear();
+        listTransactIns.clear();
+        listTransactOuts.clear();
+        if ( transactCounter > 0) {
+          // listTransact.addAll(databaseHelper.getAllTransact(user.getCurrMonth()));
+          // for (int counter = 0; counter < listTransact.size(); counter++) { 		      
+          //   // System.out.println(listTransact.get(counter));
+          //   if (listTransact.get(counter).getType().equals("Income")){
+          //     listTransactIns.add(listTransact.get(counter));
+          //   }
+          //   else if (listTransact.get(counter).getType().equals("Outcome")){
+          //     listTransactOuts.add(listTransact.get(counter));
+          //   }
+          // }   
+          listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
+          listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
+        }
+        return null;
+      }
 
-          @Override
-          protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            transactRecyclerAdapterIns.notifyDataSetChanged();
-            transactRecyclerAdapterOuts.notifyDataSetChanged();
-          }
-      }.execute();
+      @Override
+      protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        transactRecyclerAdapterIns.notifyDataSetChanged();
+        transactRecyclerAdapterOuts.notifyDataSetChanged();
+      }
+    }.execute();
   }
 
   /* Custom Methods */
@@ -285,7 +336,7 @@ public class PanelActivity extends AppCompatActivity {
     transactionIntent.putExtra("USERID", String.valueOf(user.getId()));
     transactionIntent.putExtra("MONTHID", String.valueOf(month.getId()));
     transactionIntent.putExtra("MONTHNAME", month.getMonth());
-    Log.i("TransactionActivity", "month.getMonth(): " + month.getMonth());
+    Log.i("startTransaction", "MONTH: " + month.toString());
     transactionIntent.putExtra("EXPECTEDID", String.valueOf(expected.getId()));
     transactionIntent.putExtra("PERIODID", String.valueOf(period.getId()));
     startActivity(transactionIntent);
