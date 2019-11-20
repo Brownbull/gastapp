@@ -785,6 +785,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     SQLiteDatabase db = this.getWritableDatabase();
 
     ContentValues values = new ContentValues();
+    values.put(COLUMN_PERIOD_INCOMES, period.getIncomes());
+    values.put(COLUMN_PERIOD_OUTCOMES, period.getOutcomes());
     values.put(COLUMN_PERIOD_BALANCE, period.getBalance());
     values.put(COLUMN_PERIOD_TRANSACTIONS, period.getTransactions());
     // updating row
@@ -853,7 +855,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     else{
       Log.i("updatePeriodAmnts", "Transactions NOT found");
-      Period prd = getPeriod(periodID);
+      Period prd = new Period(periodID, ins, outs, ins - outs, howMany );
+      updatePeriod(prd);
       cursor.close();
       db.close();
 
@@ -962,6 +965,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     Log.i("updateTransact", transact.toString());
     db.close();
   }
+
+  public void deleteTransact(Transact transact) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    // delete transact record by id
+    db.delete(TABLE_TRANSACT, COLUMN_TRANSACT_ID + " = ?",
+            new String[]{String.valueOf(transact.getId())});
+    db.close();
+}
+
 
   public List<Transact> getAllTransact(long periodID, String type) {
     Transact transact = new Transact();

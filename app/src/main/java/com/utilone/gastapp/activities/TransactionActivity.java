@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -59,6 +60,7 @@ public class TransactionActivity extends AppCompatActivity {
   private Spinner spinnerCategories;
   private Button btnTrIncome;
   private Button btnTrOutcome;
+  private Button btnTrDelete;
   private Button btnTrSubmit;
   private EditText edtTrDesc;
 
@@ -115,6 +117,7 @@ public class TransactionActivity extends AppCompatActivity {
     spinnerCategories = (Spinner) findViewById(R.id.spinner_categories);
     btnTrIncome = (Button) findViewById(R.id.btn_tr_income);
     btnTrOutcome = (Button) findViewById(R.id.btn_tr_outcome);
+    btnTrDelete = (Button) findViewById(R.id.btn_tr_delete);
     btnTrSubmit = (Button) findViewById(R.id.btn_tr_submit);
     edtTrDesc = (EditText) findViewById(R.id.edt_tr_desc);
   }
@@ -144,6 +147,7 @@ public class TransactionActivity extends AppCompatActivity {
     btnTrIncome.setBackgroundResource(R.drawable.inactive_radius);
 
     if(transact.getId() != -16){
+      btnTrDelete.setVisibility(LinearLayout.VISIBLE);
       if(transact.getType().equals("Income")){
         type = "Income";
         btnTrIncome.setBackgroundResource(R.drawable.income_radius);
@@ -203,6 +207,31 @@ public class TransactionActivity extends AppCompatActivity {
       databaseHelper.updateTransact(transact);
 
       Log.i("addCurrentTransact UPD POST", "transact: " + transact.toString());
+    }
+
+    finish();
+  }
+
+  public void deleteCurrentTransact(View view){
+    temp = edtTrAmnt.getText().toString();
+    amnt = Integer.parseInt(temp);
+    category = spinnerCategories.getSelectedItem().toString();
+    desc = edtTrDesc.getText().toString();
+    temp = edtDay.getText().toString();
+    day = Integer.parseInt(temp);
+    Log.i("deleteCurrentTransact DELETE", "transact: " + transact.toString());
+
+    if (transact.getId() != -16){
+    
+      transact.setType(type);
+      transact.setTransactDay(day);
+      transact.setAmount(amnt);
+      transact.setCategory(category);
+      transact.setDesc(desc);
+      databaseHelper.deleteTransact(transact);
+      Log.i("deleteCurrentTransact DELETE", "DELETED");
+
+      
     }
 
     finish();

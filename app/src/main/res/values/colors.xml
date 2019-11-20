@@ -16,4 +16,5 @@
     <color name="colorOutcomePrincipal">#F6B9BA</color>
     <color name="btnNormal">#2699FB</color>
     <color name="inactive">#B4B4B4</color>
+    <color name="delete">#E20000</color>
 </resources>
