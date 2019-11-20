@@ -236,6 +236,9 @@ public class PanelActivity extends AppCompatActivity {
       }
     }
 
+    llins.setVisibility(LinearLayout.GONE);
+    llouts.setVisibility(LinearLayout.GONE);
+
     listTransact = new ArrayList<>();
 
     listTransactIns = new ArrayList<>();
