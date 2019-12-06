@@ -37,15 +37,27 @@ tools:context="com.utilone.gastapp.activities.ProfileActivity">
       android:src="@drawable/ic_add"/>
 
     <TextView
+      android:id="@+id/textView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Touch Image to change it"
+      android:layout_marginTop="10sp"
+      android:textSize="12sp"
+      android:gravity="center"
+      android:textColor="@color/colorBlack"
+      />
+
+    <TextView
       android:id="@+id/tvMail"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="45sp"
       android:textSize="20sp"
       android:gravity="center"
-      android:text="carcamo.gabriel@gmail.com"
       android:textColor="@color/colorBlack"
        />
+
+
 
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

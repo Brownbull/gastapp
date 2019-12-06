@@ -43,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
   long userID;
   private User user;
 
-  
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +87,12 @@ public class ProfileActivity extends AppCompatActivity {
     tvName = (TextView) findViewById(R.id.tvName);
     imgProfile = (ImageView) findViewById(R.id.imageProfile);
     tvMail = (TextView) findViewById(R.id.tvMail);
-    
+
   }
 
   private void initObjects(long userID) {
     databaseHelper = new DatabaseHelper(activity);
-    user = databaseHelper.getUser(userID); 
+    user = databaseHelper.getUser(userID);
     Log.i("Profile initObjects", "user" + user.toString());
     // imgProfile.setImageResource(R.drawable.my_image);
     updateObjects();
@@ -108,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
   }
 
   public void setImage(View view){
-    Toast.makeText(this, "set Image", Toast.LENGTH_SHORT).show();
+    // Toast.makeText(this, "set Image", Toast.LENGTH_SHORT).show();
     // Intent setImageIntent = new Intent(activity, CameraActivity.class);
 
     // startActivity(setImageIntent);
@@ -152,7 +152,7 @@ public class ProfileActivity extends AppCompatActivity {
 
       user.setImage(photo);
       databaseHelper.updateUser(user);
-      Toast.makeText(this, "user" + user.toString(), Toast.LENGTH_SHORT).show();
+      // Toast.makeText(this, "user" + user.toString(), Toast.LENGTH_SHORT).show();
     }
   }
 
