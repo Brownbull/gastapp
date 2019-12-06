@@ -308,7 +308,7 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/submit"
         android:onClick="startTransaction"
-        android:src="@drawable/ic_add" />
+        android:src="@drawable/ic_addt" />
     </LinearLayout>
   </ScrollView>
 

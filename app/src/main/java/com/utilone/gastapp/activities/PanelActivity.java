@@ -3,12 +3,15 @@ package com.utilone.gastapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +47,7 @@ public class PanelActivity extends AppCompatActivity {
 
   // BACKEND
   long userID;
+  String sUserID;
   String email;
   int DiffBal;
   String cmonthName;
@@ -83,14 +87,51 @@ public class PanelActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_panel);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     Intent Login = getIntent();
-    String tempUserID = Login.getStringExtra("USERID");
-    userID = Long.valueOf(tempUserID);
+    sUserID = Login.getStringExtra("USERID");
+    userID = Long.valueOf(sUserID);
     email = Login.getStringExtra("EMAIL");
 
     // INIT
     initViews();
     initObjects(userID);
+  }
+
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_panel, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    int itemId = item.getItemId();
+    switch (itemId){
+      case android.R.id.home:
+        Toast.makeText(this, "Estas en Home", Toast.LENGTH_SHORT).show();
+        break;
+      case R.id.action_profile:
+        Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+        goProfile();
+        break;
+      case R.id.action_panel:
+        Toast.makeText(this, "Panel", Toast.LENGTH_SHORT).show();
+        break;
+      case R.id.action_graph:
+        Toast.makeText(this, "Grapf", Toast.LENGTH_SHORT).show();
+        break;
+      default:
+        Toast.makeText(this, "Action id: " + itemId, Toast.LENGTH_SHORT).show();
+        break;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  public void goProfile() {
+    Intent tvProfile = new Intent(this, ProfileActivity.class);
+    tvProfile.putExtra("USERID", sUserID);
+    startActivity(tvProfile);
   }
 
   @Override
@@ -317,10 +358,10 @@ public class PanelActivity extends AppCompatActivity {
           //   else if (listTransact.get(counter).getType().equals("Outcome")){
           //     listTransactOuts.add(listTransact.get(counter));
           //   }
-          // }   
-          listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
-          listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
-        }
+          // }
+        listTransactIns.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Income"));
+        listTransactOuts.addAll(databaseHelper.getAllTransact(user.getCurrMonth(), "Outcome"));
+      }
         return null;
       }
 

@@ -68,6 +68,7 @@ public class TransactionActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_transaction);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     
     Intent Panel = getIntent();
     temp = Panel.getStringExtra("USERID");
