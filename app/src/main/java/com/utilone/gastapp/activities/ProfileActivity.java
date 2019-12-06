@@ -121,6 +121,9 @@ public class ProfileActivity extends AppCompatActivity {
     {
       Bitmap photo = (Bitmap) data.getExtras().get("data");
       imgProfile.setImageBitmap(photo);
+
+      user.setImage(photo);
+      Toast.makeText(this, "user" + user.toString(), Toast.LENGTH_SHORT).show();
     }
   }
 

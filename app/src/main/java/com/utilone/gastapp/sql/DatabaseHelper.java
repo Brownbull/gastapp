@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.utilone.gastapp.model.Expected;
@@ -14,6 +16,7 @@ import com.utilone.gastapp.model.Period;
 import com.utilone.gastapp.model.Transact;
 import com.utilone.gastapp.model.User;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,13 @@ import java.util.List;
  * Created by lalit on 9/12/2016 -> Modified by Brownbull 11/09/2019-> Modified by Brownbull 11/09/2019.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+  // CUSTOM METHODS
+  public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+    return outputStream.toByteArray();  
+  }
 
   // DATABASE
   // Database Version
@@ -43,6 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String COLUMN_USER_ID = "user_id";
   private static final String COLUMN_USER_NAME = "user_name";
   private static final String COLUMN_USER_EMAIL = "user_email";
+  private static final String COLUMN_USER_IMAGE = "user_image";
   private static final String COLUMN_USER_PASSWORD = "user_password";
   private static final String COLUMN_USER_CURRMONTH_ID = "user_currmonth_id";
   // Month Table Columns
@@ -87,6 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DEF_COLUMN_USER_ID = COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT";
   private static final String DEF_COLUMN_USER_NAME = COLUMN_USER_NAME + " TEXT";
   private static final String DEF_COLUMN_USER_EMAIL = COLUMN_USER_EMAIL + " TEXT";
+  private static final String DEF_COLUMN_USER_IMAGE = COLUMN_USER_IMAGE + " BLOB";
   private static final String DEF_COLUMN_USER_PASSWORD = COLUMN_USER_PASSWORD + " TEXT";
   private static final String DEF_COLUMN_USER_CURRMONTH_ID = COLUMN_USER_CURRMONTH_ID + " INT";
   // Month Table Columns
@@ -131,6 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         + DEF_COLUMN_USER_ID + ","
         + DEF_COLUMN_USER_NAME + ","
         + DEF_COLUMN_USER_EMAIL + ","
+        + DEF_COLUMN_USER_IMAGE + ","
         + DEF_COLUMN_USER_PASSWORD + ","
         + DEF_COLUMN_USER_CURRMONTH_ID + ")";
   private String CREATE_MONTH_TABLE = "CREATE TABLE " + TABLE_MONTH + "("
@@ -268,6 +281,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       ContentValues values = new ContentValues();
       values.put(COLUMN_USER_NAME, user.getName());
       values.put(COLUMN_USER_EMAIL, user.getEmail());
+      values.put(COLUMN_USER_IMAGE, "");
       values.put(COLUMN_USER_PASSWORD, user.getPassword());
       values.put(COLUMN_USER_CURRMONTH_ID, -16);
 
@@ -285,8 +299,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // array of columns to fetch
     String[] columns = {
       COLUMN_USER_ID,
-      COLUMN_USER_EMAIL,
       COLUMN_USER_NAME,
+      COLUMN_USER_EMAIL,
+      COLUMN_USER_IMAGE,
       COLUMN_USER_PASSWORD
     };
     // sorting orders
@@ -318,6 +333,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
         user.setName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
         user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+        byte[] imgByte = cursor.getBlob(3);
+        user.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
         user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
         // Adding user record to list
         userList.add(user);
@@ -341,6 +358,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       ContentValues values = new ContentValues();
       values.put(COLUMN_USER_NAME, user.getName());
       values.put(COLUMN_USER_EMAIL, user.getEmail());
+      if (user.getImage() != null){
+        values.put(COLUMN_USER_IMAGE, getBitmapAsByteArray(user.getImage()));
+      }else {
+        values.put(COLUMN_USER_IMAGE, "");
+      }
       values.put(COLUMN_USER_CURRMONTH_ID, user.getCurrMonth());
       // updating row
       db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
@@ -464,8 +486,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // array of columns to fetch
     String[] columns = {
         COLUMN_USER_ID,
-        COLUMN_USER_EMAIL,
         COLUMN_USER_NAME,
+        COLUMN_USER_EMAIL,
+        COLUMN_USER_IMAGE,
         COLUMN_USER_CURRMONTH_ID
     };
     // selection criteria
@@ -495,6 +518,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
         user.setName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
         user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+        byte[] imgByte = cursor.getBlob(3);
+        user.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
         user.setCurrMonth(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_CURRMONTH_ID))));
     }
     cursor.close();
@@ -510,6 +535,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         COLUMN_USER_ID,
         COLUMN_USER_EMAIL,
         COLUMN_USER_NAME,
+        COLUMN_USER_IMAGE,
         COLUMN_USER_CURRMONTH_ID
     };
     // selection criteria
@@ -539,6 +565,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
         user.setName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
         user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+        byte[] imgByte = cursor.getBlob(3);
+        user.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
         user.setCurrMonth(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_CURRMONTH_ID))));
     }
 

@@ -1,5 +1,8 @@
 package com.utilone.gastapp.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 /**
  * Created by lalit on 9/12/2016 -> Modified by Brownbull 11/09/2019.
  */
@@ -7,6 +10,7 @@ public class User {
   private long id;
   private String name;
   private String email;
+  private Bitmap image;
   private String password;
   private long currmonthID;
 
@@ -14,6 +18,7 @@ public class User {
     this.id = -16;
     this.name = "";
     this.email = "";
+    this.image=null;
     this.password = "";
     this.currmonthID = -16;
   }
@@ -22,6 +27,7 @@ public class User {
     this.id = id;
     this.name = name;
     this.email = email;
+    this.image=null;
     this.password = password;
     this.currmonthID = -16;
   }
@@ -30,6 +36,7 @@ public class User {
     this.id = id;
     this.name = name;
     this.email = email;
+    this.image=null;
     this.password = password;
     this.currmonthID = currmonthID;
   }
@@ -53,6 +60,14 @@ public class User {
   }
   public void setEmail(String email) {
       this.email = email;
+  }
+
+  public Bitmap getImage() {
+    return this.image;
+  }
+
+  public void setImage(Bitmap img) {
+     this.image = img; // this is a function
   }
 
   public String getPassword() {
