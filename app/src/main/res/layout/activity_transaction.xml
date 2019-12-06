@@ -12,7 +12,7 @@
   tools:context="com.utilone.gastapp.activities.TransactionActivity">
 
   <LinearLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="30dp"
     android:layout_marginStart="16dp"
@@ -37,24 +37,23 @@
       android:orientation="horizontal">
 
       <EditText
-          android:id="@+id/edt_day"
-          android:layout_width="70dp"
-          android:layout_height="wrap_content"
-          android:layout_margin="12dp"
-          android:layout_weight="1"
-          android:background="@drawable/month_radius"
-          android:inputType="number"
-          android:minWidth="10dp"
-          android:paddingLeft="12dp"
-          android:paddingTop="5dp"
-          android:paddingRight="12dp"
-          android:paddingBottom="5dp"
-          android:textColor="#0D0E0F"
-          android:textColorHint="#00070606"
-          android:textSize="22sp"
-          android:textStyle="bold"
-          android:selectAllOnFocus="true"
-          />
+        android:id="@+id/edt_day"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/month_radius"
+        android:inputType="number"
+        android:minWidth="10dp"
+        android:paddingLeft="12dp"
+        android:paddingTop="5dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="5dp"
+        android:selectAllOnFocus="true"
+        android:textColor="#0D0E0F"
+        android:textColorHint="#00070606"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
       <TextView
         android:id="@+id/tv_month"
@@ -87,39 +86,37 @@
         android:textStyle="bold" />
     </LinearLayout>
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="50sp"
-    android:layout_marginRight="50sp"
-    android:gravity="left"
-    android:orientation="horizontal">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="50sp"
+      android:layout_marginRight="50sp"
+      android:gravity="left"
+      android:orientation="horizontal">
 
-    <TextView
-      android:id="@+id/moneylabel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_margin="5sp"
-      android:background="@null"
-      android:gravity="center"
-      android:text="$"
-      android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-      android:textColor="@color/colorYearFont"
-      />
+      <TextView
+        android:id="@+id/moneylabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@null"
+        android:gravity="center"
+        android:text="$"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="@color/colorYearFont" />
 
-    <EditText
-      android:id="@+id/edt_tr_amnt"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_margin="5sp"
-      android:background="@null"
-      android:gravity="center"
-      android:hint="1000"
-      android:inputType="number"
-      android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-      android:textColorHint="@color/colorYearFont"
-      android:selectAllOnFocus="true"
-        />
+      <EditText
+        android:id="@+id/edt_tr_amnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@null"
+        android:gravity="center"
+        android:hint="1000"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColorHint="@color/colorYearFont" />
     </LinearLayout>
 
     <LinearLayout
@@ -152,6 +149,7 @@
         android:layout_alignParentLeft="true"
         android:layout_margin="12dp"
         android:layout_weight="1"
+        android:onClick="setIncome"
         android:paddingLeft="15dp"
         android:paddingTop="50dp"
         android:paddingRight="15dp"
@@ -159,8 +157,7 @@
         android:text="Button"
         android:textColor="@color/colorBlack"
         android:textSize="22sp"
-        android:textStyle="bold"
-        android:onClick="setIncome"/>
+        android:textStyle="bold" />
 
       <Button
         android:id="@+id/btn_tr_outcome"
@@ -169,6 +166,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="12dp"
         android:layout_weight="1"
+        android:onClick="setOutcome"
         android:paddingLeft="15dp"
         android:paddingTop="50dp"
         android:paddingRight="15dp"
@@ -176,25 +174,25 @@
         android:text="Button"
         android:textColor="@color/colorBlack"
         android:textSize="22sp"
-        android:textStyle="bold"
-        android:onClick="setOutcome"/>
+        android:textStyle="bold" />
     </LinearLayout>
 
-  <LinearLayout
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="horizontal"
-      android:gravity="center">
-    <Button
+      android:gravity="center"
+      android:orientation="horizontal">
+
+      <Button
         android:id="@+id/btn_tr_delete"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="10sp"
-        android:layout_marginRight="15sp"
         android:layout_marginLeft="15sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginRight="15sp"
+        android:layout_marginBottom="10sp"
         android:background="@drawable/delete_radius"
+        android:onClick="deleteCurrentTransact"
         android:paddingLeft="25sp"
         android:paddingTop="10sp"
         android:paddingRight="25sp"
@@ -202,25 +200,25 @@
         android:text="X"
         android:textSize="30sp"
         android:typeface="monospace"
-        android:onClick="deleteCurrentTransact"/>
+        android:visibility="gone" />
 
-    <Button
-      android:id="@+id/btn_tr_submit"
+      <Button
+        android:id="@+id/btn_tr_submit"
 
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="10sp"
-      android:layout_marginBottom="10sp"
-      android:background="@drawable/submit_radius"
-      android:paddingLeft="25sp"
-      android:paddingTop="10sp"
-      android:paddingRight="25sp"
-      android:paddingBottom="10sp"
-      android:text="Submit"
-      android:textSize="30sp"
-      android:typeface="monospace"
-      android:onClick="addCurrentTransact"/>
-  </LinearLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        android:background="@drawable/submit_radius"
+        android:onClick="addCurrentTransact"
+        android:paddingLeft="25sp"
+        android:paddingTop="10sp"
+        android:paddingRight="25sp"
+        android:paddingBottom="10sp"
+        android:text="Submit"
+        android:textSize="30sp"
+        android:typeface="monospace" />
+    </LinearLayout>
 
     <EditText
       android:id="@+id/edt_tr_desc"
@@ -229,9 +227,8 @@
       android:ems="10"
       android:hint="Description (Optional)"
       android:inputType="textPersonName"
-      android:textColorHint="@color/cardview_dark_background"
       android:selectAllOnFocus="true"
-        />
+      android:textColorHint="@color/cardview_dark_background" />
 
   </LinearLayout>
 </android.support.constraint.ConstraintLayout>

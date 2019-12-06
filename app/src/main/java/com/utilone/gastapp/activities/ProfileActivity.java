@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,6 +60,29 @@ public class ProfileActivity extends AppCompatActivity {
     initObjects(userID);
   }
 
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_panel, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    int itemId = item.getItemId();
+    switch (itemId){
+      case android.R.id.home:
+        break;
+      case R.id.action_profile:
+        break;
+      case R.id.action_panel:
+        finish();
+        break;
+      default:
+        Toast.makeText(this, "Action id: " + itemId, Toast.LENGTH_SHORT).show();
+        break;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   private void initViews() {
     tvName = (TextView) findViewById(R.id.tvName);
     imgProfile = (ImageView) findViewById(R.id.imageProfile);
@@ -76,8 +101,11 @@ public class ProfileActivity extends AppCompatActivity {
   private void updateObjects() {
     tvName.setText(user.getName());
     tvMail.setText(user.getEmail());
-    // imgProfile.setImageResource(R.drawable.my_image);
+
+    if (user.getImage() != null){
+      imgProfile.setImageBitmap(user.getImage());
     }
+  }
 
   public void setImage(View view){
     Toast.makeText(this, "set Image", Toast.LENGTH_SHORT).show();
@@ -123,6 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
       imgProfile.setImageBitmap(photo);
 
       user.setImage(photo);
+      databaseHelper.updateUser(user);
       Toast.makeText(this, "user" + user.toString(), Toast.LENGTH_SHORT).show();
     }
   }

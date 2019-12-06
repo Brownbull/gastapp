@@ -109,17 +109,11 @@ public class PanelActivity extends AppCompatActivity {
     int itemId = item.getItemId();
     switch (itemId){
       case android.R.id.home:
-        Toast.makeText(this, "Estas en Home", Toast.LENGTH_SHORT).show();
         break;
       case R.id.action_profile:
-        Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
         goProfile();
         break;
       case R.id.action_panel:
-        Toast.makeText(this, "Panel", Toast.LENGTH_SHORT).show();
-        break;
-      case R.id.action_graph:
-        Toast.makeText(this, "Grapf", Toast.LENGTH_SHORT).show();
         break;
       default:
         Toast.makeText(this, "Action id: " + itemId, Toast.LENGTH_SHORT).show();

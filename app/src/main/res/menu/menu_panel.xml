@@ -16,11 +16,4 @@
       android:title="Op 2"
       app:showAsAction="always"
       />
-    <item
-      android:id="@+id/action_graph"
-      android:icon="@drawable/ic_graph"
-      android:orderInCategory="30"
-      android:title="Op 2"
-      app:showAsAction="always"
-      />
 </menu>
